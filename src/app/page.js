@@ -157,7 +157,7 @@ export default function Home() {
         {/* Call to Action */}
         <div className="text-center bg-gradient-to-r from-blue-50 to-purple-50 rounded-3xl p-12">
           <h3 className="text-3xl font-bold text-gray-900 mb-4">
-            Can't find what you're looking for?
+            Can&apos;t find what you&apos;re looking for?
           </h3>
           <p className="text-lg text-gray-600 mb-8 max-w-2xl mx-auto">
             Our experts are here to help you find the perfect laptop for your specific needs and budget.
