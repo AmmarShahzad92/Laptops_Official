@@ -1,4 +1,14 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Premium Laptops Store
+
+A modern Next.js application for browsing and purchasing premium gaming and business laptops.
+
+## Features
+
+- Responsive product grid with laptop listings
+- Search and filter functionality
+- Product categories (Gaming, Business, Workstation)
+- Modern UI with Tailwind CSS
+- Mock API for product data
 
 ## Getting Started
 
@@ -17,6 +27,18 @@ bun dev
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
 You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+
+## Project Structure
+
+- `/src/app` - Next.js app router pages
+- `/src/components` - React components
+- `/src/data` - Mock data files
+- `/src/app/api` - API routes
+
+## API Endpoints
+
+- `GET /api/mock-products` - Get all products
+- `GET /api/mock-products?id={id}` - Get product by ID
 
 This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
 
