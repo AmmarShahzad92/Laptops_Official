@@ -3,12 +3,6 @@
 import { useState, useEffect } from "react";
 import ProductCard from '@/components/ProductCard';
 
-// export const metadata = {
-//   title: "Premium Gaming & Business Laptops",
-//   description:
-//     "Discover our collection of high-performance gaming laptops, business notebooks, and workstations. Best prices in Pakistan with quality guarantee.",
-// };
-
 export default function Home() {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -38,7 +32,7 @@ export default function Home() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50">
+      <div className="min-h-screen bg-gradient-to-br from-blue-50  to-purple-50">
         {/* Loading Hero */}
         <section className="relative overflow-hidden bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-700 text-white">
           <div className="absolute inset-0 bg-black/20"></div>
@@ -84,7 +78,7 @@ export default function Home() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50  to-purple-50">
       {/* Hero Section */}
       <section className="relative overflow-hidden bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-700 text-white">
         {/* Animated Background */}
