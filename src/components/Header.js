@@ -1,4 +1,14 @@
 export default function Header({ searchTerm, setSearchTerm }) {
+  const scrollToProducts = () => {
+    const productsSection = document.getElementById('products-grid');
+    if (productsSection) {
+      productsSection.scrollIntoView({ 
+        behavior: 'smooth',
+        block: 'start'
+      });
+    }
+  };
+
   return (
     <header className="bg-black/90 backdrop-blur-sm border-b border-gray-800/50 sticky top-0 z-40 shadow-2xl">
       <div className="container mx-auto px-6">
@@ -28,7 +38,8 @@ export default function Header({ searchTerm, setSearchTerm }) {
                 placeholder="Search laptops by brand, model, CPU, or GPU..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full bg-gray-900/80 border border-gray-700 rounded-xl px-4 py-3 pl-12 text-white placeholder-gray-500 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all duration-300 shadow-inner"
+                onClick={scrollToProducts}
+                className="w-full bg-gray-900/80 border border-gray-700 rounded-xl px-4 py-3 pl-12 text-white placeholder-gray-500 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all duration-300 shadow-inner hover:border-blue-400 cursor-pointer"
               />
               <svg className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />

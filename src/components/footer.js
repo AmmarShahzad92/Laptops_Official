@@ -33,7 +33,7 @@ export default function Footer() {
                         <div className="space-y-3 text-gray-400">
                             <p className="flex items-center">
                                 <span className="text-blue-400 mr-2">📞</span>
-                                +92 300 1234567
+                                +92 319 4944296
                             </p>
                             <p className="flex items-center">
                                 <span className="text-blue-400 mr-2">✉️</span>
