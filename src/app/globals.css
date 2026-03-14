@@ -15,7 +15,7 @@
   --nm-accent-dark: #3461d9;
   --nm-success: #48bb78;
   --nm-danger: #fc8181;
-  --nm-warning: #f6e05e;
+  --nm-warning: #6b9aff;
 }
 
 [data-theme="dark"] {
@@ -29,7 +29,7 @@
   --nm-accent-dark: #4a7cff;
   --nm-success: #68d391;
   --nm-danger: #feb2b2;
-  --nm-warning: #faf089;
+  --nm-warning: #6b9aff;
 }
 
 * {

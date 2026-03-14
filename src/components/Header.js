@@ -53,13 +53,19 @@ export default function Header({ searchTerm, setSearchTerm, brands, onBrandSelec
           {/* Logo */}
           <div className="flex items-center gap-2 md:gap-3 flex-shrink-0">
             <div className="nm-raised-sm w-9 h-9 md:w-11 md:h-11 flex items-center justify-center">
-              <svg className="w-5 h-5 md:w-6 md:h-6 text-[var(--nm-accent)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              {/* svg element for logo */}
+              {/* <svg className="w-5 h-5 md:w-6 md:h-6 text-[var(--nm-accent)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-              </svg>
+              </svg> */}
+              <img
+                src="/Images/web%20icon.svg"
+                alt="Laptops Official logo"
+                className="w-11 h-11 md:w-11 md:h-11 object-contain"
+              />
             </div>
             <div className="hidden sm:block">
               <h1 className="text-base md:text-xl font-bold text-[var(--nm-text)] leading-tight">Laptops Official</h1>
-              <p className="text-[10px] md:text-xs text-[var(--nm-text-secondary)] leading-tight">Know it. Test it. Own it.</p>
+              <p className="text-[10px] md:text-xs text-[var(--nm-text-secondary)] leading-tight">Know it.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Test it.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Own it.</p>
             </div>
           </div>
 
@@ -106,9 +112,10 @@ export default function Header({ searchTerm, setSearchTerm, brands, onBrandSelec
           {/* Search - properly spaced with no icon overlap */}
           <div className="flex-1 min-w-0 mx-2">
             <div className="relative max-w-lg mx-auto">
-              <svg className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-[var(--nm-shadow-dark)] pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              {/* commented svg for search */}
+              {/* <svg className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-[var(--nm-shadow-dark)] pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-              </svg>
+              </svg> */}
               <input
                 type="text"
                 placeholder="Search laptops..."
