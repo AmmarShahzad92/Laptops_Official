@@ -1,7 +1,5 @@
 'use client';
-import { useState, useEffect, useMemo } from "react";
-import Loading from "@/components/Loading";
-import Error from "@/components/Error";
+import { useState, useMemo } from "react";
 import Header from "@/components/Header";
 import HeroSection from "@/components/HeroSection";
 import ProductsGrid from "@/components/ProductsGrid";
@@ -10,36 +8,14 @@ import WhatsAppButton from "@/components/WhatsAppButton";
 import CartSidebar from "@/components/CartSidebar";
 import AuthModal from "@/components/AuthModal";
 import ProductDetailModal from "@/components/ProductDetailModal";
+import { products as staticProducts } from "@/data/products";
 
 export default function Home() {
-  const [products, setProducts] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedBrand, setSelectedBrand] = useState('');
   const [detailView, setDetailView] = useState(null); // { products, index }
 
-  useEffect(() => {
-    const fetchProducts = async () => {
-      try {
-        setLoading(true);
-        const response = await fetch('/api/products');
-        if (!response.ok) throw new Error('Failed to fetch products');
-        const data = await response.json();
-        setProducts(data);
-      } catch (err) {
-        setError(err.message);
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchProducts();
-  }, []);
-
-  const brands = useMemo(() => [...new Set(products.map(p => p.brand))].sort(), [products]);
-
-  if (loading) return <Loading />;
-  if (error) return <Error error={error} />;
+  const brands = useMemo(() => [...new Set(staticProducts.map(p => p.brand))].sort(), []);
 
   return (
     <div className="min-h-screen bg-[var(--nm-bg)]">
@@ -51,7 +27,7 @@ export default function Home() {
       />
       <HeroSection />
       <ProductsGrid
-        products={products}
+        products={staticProducts}
         searchTerm={searchTerm}
         setSearchTerm={setSearchTerm}
         selectedBrand={selectedBrand}
