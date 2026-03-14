@@ -5,6 +5,8 @@ import { useState, useEffect } from "react";
 export default function ProductsGrid({ products, searchTerm, setSearchTerm, selectedBrand, setSelectedBrand, onViewProduct }) {
   const [selectedScreenSize, setSelectedScreenSize] = useState('');
   const [filteredProducts, setFilteredProducts] = useState([]);
+  const [maxPrice, setMaxPrice] = useState('');
+  const [selectedCpu, setSelectedCpu] = useState('');
 
   useEffect(() => {
     let filtered = products;
@@ -22,12 +24,37 @@ export default function ProductsGrid({ products, searchTerm, setSearchTerm, sele
     if (selectedScreenSize) {
       filtered = filtered.filter(product => product.screen.includes(selectedScreenSize));
     }
+    if (maxPrice) {
+      filtered = filtered.filter(product => product.price <= parseInt(maxPrice, 10));
+    }
+    if (selectedCpu) {
+      filtered = filtered.filter(product => product.cpu.toLowerCase().includes(selectedCpu.toLowerCase()));
+    }
     setFilteredProducts(filtered);
-  }, [products, searchTerm, selectedBrand, selectedScreenSize]);
+  }, [products, searchTerm, selectedBrand, selectedScreenSize, maxPrice, selectedCpu]);
 
   const screenSizes = [...new Set(products.map(p => p.screen.split('"')[0] + '"'))];
   const brands = [...new Set(products.map(p => p.brand))];
-
+  const cpuTypes = [
+    ...new Set(
+      products.flatMap(p => {
+        const cpu = p.cpu.toLowerCase();
+        const types = [];
+        if (cpu.includes('i5')) types.push('Core i5');
+        if (cpu.includes('i7')) types.push('Core i7');
+        if (cpu.includes('i9')) types.push('Core i9');
+        if (cpu.includes('ryzen 5')) types.push('Ryzen 5');
+        if (cpu.includes('ryzen 7')) types.push('Ryzen 7');
+        if (cpu.includes('ryzen 9')) types.push('Ryzen 9');
+        if (cpu.includes('m1')) types.push('Apple M1');
+        if (cpu.includes('m2')) types.push('Apple M2');
+        if (cpu.includes('m3')) types.push('Apple M3');
+        if (cpu.includes('m4')) types.push('Apple M4');
+        return types;
+      })
+    )
+  ];
+  
   return (
     <>
       <section id="products-grid" className="py-6 md:py-8">
@@ -46,6 +73,17 @@ export default function ProductsGrid({ products, searchTerm, setSearchTerm, sele
                   <option key={brand} value={brand}>{brand}</option>
                 ))}
               </select>
+              
+              <select
+                value={selectedCpu}
+                onChange={(e) => setSelectedCpu(e.target.value)}
+                className="nm-select text-sm"
+              >
+                <option value="">All Processors</option>
+                {cpuTypes.map(cpu => (
+                  <option key={cpu} value={cpu}>{cpu}</option>
+                ))}
+              </select>
 
               <select
                 value={selectedScreenSize}
@@ -58,9 +96,19 @@ export default function ProductsGrid({ products, searchTerm, setSearchTerm, sele
                 ))}
               </select>
 
-              {(selectedBrand || selectedScreenSize || searchTerm) && (
+              <input
+                type="number"
+                placeholder="Max Price"
+                value={maxPrice}
+                onChange={(e) => setMaxPrice(e.target.value)}
+                className="nm-input text-sm w-32"
+              />
+
+              
+
+              {(selectedBrand || selectedScreenSize || searchTerm || maxPrice || selectedCpu) && (
                 <button
-                  onClick={() => { setSelectedBrand(''); setSelectedScreenSize(''); setSearchTerm(''); }}
+                  onClick={() => { setSelectedBrand(''); setSelectedScreenSize(''); setSearchTerm(''); setMaxPrice(''); setSelectedCpu(''); }}
                   className="nm-btn px-4 py-2 text-sm text-[var(--nm-danger)]"
                 >
                   Clear
