@@ -105,7 +105,7 @@ INSERT INTO laptops (brand, model, cpu, ram, storage, gpu, screen, condition, pr
 ),
 (
   'Asus', 'ROG Zephyrus G15', 'AMD Ryzen 9 6900HS', '16GB DDR5', '1TB NVMe SSD', 'RTX 3080 8GB', '15.6" QHD 165Hz', 'New', 320000, 3,
-  ARRAY['https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=800&q=80','https://images.unsplash.com/photo-1612203982546-b85db8c2af95?auto=format&fit=crop&w=800&q=80','https://images.unsplash.com/photo-1548690312-e3b507d8cc1d?auto=format&fit=crop&w=800&q=80'],
+  ARRAY['https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=800&q=80','https://images.unsplash.com/photo-1611532736597-de2d4265fba3?auto=format&fit=crop&w=800&q=80','https://images.unsplash.com/photo-1548690312-e3b507d8cc1d?auto=format&fit=crop&w=800&q=80'],
   ARRAY['Slim Lightweight Design','Adaptive-Sync Display','Excellent Cooling'],
   '{"processor":"AMD Ryzen 9 6900HS (3.3GHz base, 4.9GHz boost)","memory":"16GB DDR5-4800MHz","storage":"1TB PCIe Gen4 NVMe SSD","graphics":"NVIDIA GeForce RTX 3080 8GB GDDR6","display":"15.6\" QHD (2560x1440) IPS 165Hz Adaptive-Sync","os":"Windows 11 Home","weight":"1.9 kg","battery":"90Wh 4-cell","warranty":"1 year international"}'::jsonb,
   '2024-01-02'
@@ -126,14 +126,14 @@ INSERT INTO laptops (brand, model, cpu, ram, storage, gpu, screen, condition, pr
 ),
 (
   'Razer', 'Blade 15 Advanced', 'Intel Core i7-13800H', '16GB DDR5', '1TB NVMe SSD', 'RTX 4070 8GB', '15.6" QHD 240Hz', 'New', 420000, 2,
-  ARRAY['https://images.unsplash.com/photo-1527443154391-507e9dc6c5cc?auto=format&fit=crop&w=800&q=80','https://images.unsplash.com/photo-1541807084-5c52b6b3adef?auto=format&fit=crop&w=800&q=80','https://images.unsplash.com/photo-1618424181497-157f25b6ddd5?auto=format&fit=crop&w=800&q=80'],
+  ARRAY['https://images.unsplash.com/photo-1593640408182-31c70c8268f5?auto=format&fit=crop&w=800&q=80','https://images.unsplash.com/photo-1541807084-5c52b6b3adef?auto=format&fit=crop&w=800&q=80','https://images.unsplash.com/photo-1618424181497-157f25b6ddd5?auto=format&fit=crop&w=800&q=80'],
   ARRAY['Ultra-Thin CNC Aluminum','Chroma RGB Keyboard','240Hz Gaming Display'],
   '{"processor":"Intel Core i7-13800H (2.4GHz base, 5.2GHz boost)","memory":"16GB DDR5-5200MHz","storage":"1TB PCIe Gen4 NVMe SSD","graphics":"NVIDIA GeForce RTX 4070 8GB GDDR6","display":"15.6\" QHD (2560x1440) IPS 240Hz","os":"Windows 11 Home","weight":"2.0 kg","battery":"80Wh 4-cell","warranty":"1 year international"}'::jsonb,
   '2024-01-07'
 ),
 (
   'Dell', 'XPS 15 OLED', 'Intel Core i7-12700H', '16GB DDR5', '1TB NVMe SSD', 'RTX 3050 Ti 4GB', '15.6" 3.5K OLED Touch', 'New', 310000, 3,
-  ARRAY['https://images.unsplash.com/photo-1515879218367-8466d910aaa4?auto=format&fit=crop&w=800&q=80','https://images.unsplash.com/photo-1496181133206-80ce9b941758?auto=format&fit=crop&w=800&q=80','https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=800&q=80'],
+  ARRAY['https://images.unsplash.com/photo-1515879218367-8466d910aaa4?auto=format&fit=crop&w=800&q=80','https://images.unsplash.com/photo-1484788984921-03950022c9ef?auto=format&fit=crop&w=800&q=80','https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=800&q=80'],
   ARRAY['OLED Touch Display','Premium Aluminum Design','Long Battery Life'],
   '{"processor":"Intel Core i7-12700H (2.3GHz base, 4.7GHz boost)","memory":"16GB DDR5-4800MHz","storage":"1TB PCIe Gen4 NVMe SSD","graphics":"NVIDIA GeForce RTX 3050 Ti 4GB GDDR6","display":"15.6\" 3.5K OLED Touch (3456x2160)","os":"Windows 11 Pro","weight":"1.9 kg","battery":"86Wh 6-cell","warranty":"1 year premium support"}'::jsonb,
   '2024-01-09'

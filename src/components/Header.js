@@ -7,8 +7,10 @@ import useThemeStore from '@/store/themeStore';
 export default function Header({ searchTerm, setSearchTerm, brands, onBrandSelect }) {
   const [showDropdown, setShowDropdown] = useState(false);
   const [showMobileMenu, setShowMobileMenu] = useState(false);
+  const [showUserMenu, setShowUserMenu] = useState(false);
   const dropdownRef = useRef(null);
   const mobileRef = useRef(null);
+  const userMenuRef = useRef(null);
   const { totalItems, setIsOpen } = useCart();
   const { user, openAuth, logout } = useAuthStore();
   const { theme, toggle } = useThemeStore();
@@ -17,6 +19,7 @@ export default function Header({ searchTerm, setSearchTerm, brands, onBrandSelec
     const handleClick = (e) => {
       if (dropdownRef.current && !dropdownRef.current.contains(e.target)) setShowDropdown(false);
       if (mobileRef.current && !mobileRef.current.contains(e.target)) setShowMobileMenu(false);
+      if (userMenuRef.current && !userMenuRef.current.contains(e.target)) setShowUserMenu(false);
     };
     document.addEventListener('mousedown', handleClick);
     return () => document.removeEventListener('mousedown', handleClick);
@@ -144,14 +147,43 @@ export default function Header({ searchTerm, setSearchTerm, brands, onBrandSelec
               )}
             </button>
 
-            {/* Auth */}
+            {/* Auth — user dropdown or sign-in button */}
             {user ? (
-              <button onClick={logout} className="nm-btn px-3 py-1.5 md:px-4 md:py-2 text-xs md:text-sm flex items-center gap-1.5">
-                <svg className="w-4 h-4 text-[var(--nm-accent)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                </svg>
-                <span className="hidden md:inline max-w-[80px] truncate">{user.username}</span>
-              </button>
+              <div ref={userMenuRef} className="relative">
+                <button
+                  onClick={() => setShowUserMenu(!showUserMenu)}
+                  className={`nm-btn px-3 py-1.5 md:px-3.5 md:py-2 text-xs md:text-sm flex items-center gap-1.5 ${showUserMenu ? 'active' : ''}`}
+                >
+                  {/* User avatar circle */}
+                  <span className="w-5 h-5 rounded-full bg-[var(--nm-accent)] text-white text-[10px] font-bold flex items-center justify-center flex-shrink-0">
+                    {user.username?.[0]?.toUpperCase() || 'U'}
+                  </span>
+                  <span className="hidden md:inline max-w-[72px] truncate font-semibold">{user.username}</span>
+                  <svg className={`w-3 h-3 text-[var(--nm-text-secondary)] transition-transform hidden md:block ${showUserMenu ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  </svg>
+                </button>
+
+                {showUserMenu && (
+                  <div className="absolute top-full right-0 mt-2 nm-dropdown p-3 w-52 animate-slide-down z-50">
+                    {/* User info */}
+                    <div className="px-3 py-2 mb-2 nm-inset-sm">
+                      <p className="text-xs font-bold text-[var(--nm-text)] truncate">{user.username}</p>
+                      <p className="text-[10px] text-[var(--nm-text-secondary)] truncate mt-0.5">{user.email}</p>
+                    </div>
+                    {/* Sign out */}
+                    <button
+                      onClick={() => { logout(); setShowUserMenu(false); }}
+                      className="w-full text-left px-3 py-2 text-sm font-semibold text-[var(--nm-danger)] rounded-lg hover:bg-[var(--nm-shadow-light)] flex items-center gap-2 transition-colors"
+                    >
+                      <svg className="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                      </svg>
+                      Sign Out
+                    </button>
+                  </div>
+                )}
+              </div>
             ) : (
               <button onClick={() => openAuth('login')} className="nm-btn px-3 py-1.5 md:px-4 md:py-2 text-xs md:text-sm flex items-center gap-1.5">
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">

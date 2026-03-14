@@ -2,6 +2,18 @@ import { NextResponse } from 'next/server';
 import { supabase } from '@/lib/supabase';
 import { memRegister, hashPassword } from '@/lib/memStore';
 
+/**
+ * POST /api/auth/register
+ *
+ * Storage behaviour:
+ *   • NEXT_PUBLIC_SUPABASE_URL set  → stores { username, email, password_hash } in the
+ *     Supabase `users` table (see supabase/schema.sql for table definition).
+ *   • No Supabase keys             → stores the same fields in the in-memory Map
+ *     (src/lib/memStore.js).  Data persists until the dev server restarts.
+ *
+ * The password is never stored in plain text — it is SHA-256 hashed via
+ * the Web Crypto API before being persisted.
+ */
 export async function POST(request) {
   try {
     const { username, email, password } = await request.json();
@@ -13,7 +25,7 @@ export async function POST(request) {
       );
     }
 
-    // Supabase path
+    // ── Supabase path ────────────────────────────────────────────────────────
     if (supabase) {
       const { data: existing } = await supabase
         .from('users')
@@ -38,7 +50,7 @@ export async function POST(request) {
       return NextResponse.json({ user }, { status: 201 });
     }
 
-    // In-memory fallback (dev mode — no Supabase keys yet)
+    // ── In-memory fallback ───────────────────────────────────────────────────
     const user = await memRegister(username, email, password);
     return NextResponse.json({ user }, { status: 201 });
   } catch (err) {
