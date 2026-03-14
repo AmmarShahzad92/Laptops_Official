@@ -1,5 +1,6 @@
 'use client';
 import { useState, useRef, useEffect } from 'react';
+import Image from 'next/image';
 import { useCart } from '@/context/CartContext';
 import useAuthStore from '@/store/authStore';
 import useThemeStore from '@/store/themeStore';
@@ -57,10 +58,13 @@ export default function Header({ searchTerm, setSearchTerm, brands, onBrandSelec
               {/* <svg className="w-5 h-5 md:w-6 md:h-6 text-[var(--nm-accent)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
               </svg> */}
-              <img
-                src="/Images/web%20icon.svg"
+
+              <Image
+                src="/Images/web icon.svg"
                 alt="Laptops Official logo"
-                className="w-11 h-11 md:w-11 md:h-11 object-contain"
+                width={44}
+                height={44}
+                className="object-contain"
               />
             </div>
             <div className="hidden sm:block">
