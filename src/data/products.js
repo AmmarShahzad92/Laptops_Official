@@ -106,7 +106,7 @@ export const products = [
     qty: 3,
     images: [
       'https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=800&q=80',
-      'https://images.unsplash.com/photo-1612203982546-b85db8c2af95?auto=format&fit=crop&w=800&q=80',
+      'https://images.unsplash.com/photo-1611532736597-de2d4265fba3?auto=format&fit=crop&w=800&q=80',
       'https://images.unsplash.com/photo-1548690312-e3b507d8cc1d?auto=format&fit=crop&w=800&q=80'
     ],
     highlights: ['Slim Lightweight Design', 'Adaptive-Sync Display', 'Excellent Cooling'],
@@ -198,7 +198,7 @@ export const products = [
     price: 420000,
     qty: 2,
     images: [
-      'https://images.unsplash.com/photo-1527443154391-507e9dc6c5cc?auto=format&fit=crop&w=800&q=80',
+      'https://images.unsplash.com/photo-1593640408182-31c70c8268f5?auto=format&fit=crop&w=800&q=80',
       'https://images.unsplash.com/photo-1541807084-5c52b6b3adef?auto=format&fit=crop&w=800&q=80',
       'https://images.unsplash.com/photo-1618424181497-157f25b6ddd5?auto=format&fit=crop&w=800&q=80'
     ],
@@ -230,7 +230,7 @@ export const products = [
     qty: 3,
     images: [
       'https://images.unsplash.com/photo-1515879218367-8466d910aaa4?auto=format&fit=crop&w=800&q=80',
-      'https://images.unsplash.com/photo-1496181133206-80ce9b941758?auto=format&fit=crop&w=800&q=80',
+      'https://images.unsplash.com/photo-1484788984921-03950022c9ef?auto=format&fit=crop&w=800&q=80',
       'https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=800&q=80'
     ],
     highlights: ['OLED Touch Display', 'Premium Aluminum Design', 'Long Battery Life'],

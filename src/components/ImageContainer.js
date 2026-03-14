@@ -1,20 +1,32 @@
 import Image from 'next/image';
 import { useState } from 'react';
 
-export default function ImageContainer({ productImage, displayName, condition, images, availability, qty }) {
+/** Append WebP format hint to Unsplash URLs for faster CDN delivery */
+function optimizeUrl(url) {
+  if (!url || !url.includes('unsplash.com')) return url;
+  const base = url.split('?')[0];
+  return `${base}?auto=format&fit=crop&w=640&q=72&fm=webp`;
+}
+
+export default function ImageContainer({ productImage, displayName, condition, images, availability, qty, priority = false }) {
   const [imageError, setImageError] = useState(false);
+  const optimized = optimizeUrl(productImage);
 
   return (
-    <div className="relative h-48 overflow-hidden" style={{ borderRadius: '20px 20px 0 0', background: 'linear-gradient(145deg, #d3d9e3, #e6ebf2)' }}>
+    <div
+      className="relative h-48 overflow-hidden"
+      style={{ borderRadius: '20px 20px 0 0', background: 'linear-gradient(145deg, var(--nm-shadow-dark), var(--nm-bg))' }}
+    >
       {images?.[0] && !imageError ? (
         <Image
-          src={productImage}
+          src={optimized || productImage}
           alt={displayName}
           fill
           className="object-cover group-hover:scale-105 transition-transform duration-500"
-          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
+          sizes="(max-width: 640px) 92vw, (max-width: 1024px) 44vw, (max-width: 1280px) 30vw, 22vw"
           onError={() => setImageError(true)}
-          priority={false}
+          priority={priority}
+          loading={priority ? 'eager' : 'lazy'}
         />
       ) : (
         <div className="flex items-center justify-center h-full">
@@ -27,14 +39,14 @@ export default function ImageContainer({ productImage, displayName, condition, i
         </div>
       )}
 
-      {/* Status Badge */}
+      {/* Stock badge */}
       <div className="absolute top-3 right-3 z-20">
         <span className={`nm-badge text-xs ${availability ? 'text-[var(--nm-success)]' : 'text-[var(--nm-danger)]'}`}>
-          {availability ? (qty ? `${qty} Available` : 'In Stock') : 'Out of Stock'}
+          {availability ? (qty ? `${qty} Left` : 'In Stock') : 'Out of Stock'}
         </span>
       </div>
 
-      {/* Condition Badge */}
+      {/* Condition badge */}
       {condition && (
         <div className="absolute bottom-3 left-3 z-20">
           <span className="nm-badge text-[var(--nm-accent)] text-xs">{condition}</span>
