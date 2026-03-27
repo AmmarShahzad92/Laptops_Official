@@ -1,48 +1,45 @@
 import { NextResponse } from 'next/server';
 import { supabase } from '@/lib/supabase';
-import { products as mockProducts, getProductById } from '@/data/products';
 
 export async function GET(request) {
+  if (!supabase) {
+    return NextResponse.json(
+      { error: 'Supabase client not initialized' },
+      { status: 500 }
+    );
+  }
+
   const { searchParams } = new URL(request.url);
   const id = searchParams.get('id');
 
-  // Try Supabase first, fall back to mock data
-  if (supabase) {
-    try {
-      if (id) {
-        const { data, error } = await supabase
-          .from('laptops')
-          .select('*')
-          .eq('id', id)
-          .single();
-
-        if (error || !data) {
-          return NextResponse.json({ error: 'Product not found' }, { status: 404 });
-        }
-        return NextResponse.json(data);
-      }
-
+  try {
+    if (id) {
       const { data, error } = await supabase
         .from('laptops')
         .select('*')
-        .order('created_at', { ascending: false });
+        .eq('id', id)
+        .single();
 
-      if (!error && data?.length > 0) {
-        return NextResponse.json(data);
+      if (error || !data) {
+        return NextResponse.json({ error: 'Product not found' }, { status: 404 });
       }
-    } catch {
-      // Fall through to mock data
+      return NextResponse.json(data);
     }
-  }
 
-  // Fallback: mock data
-  if (id) {
-    const product = getProductById(id);
-    if (!product) {
-      return NextResponse.json({ error: 'Product not found' }, { status: 404 });
+    const { data, error } = await supabase
+      .from('laptops')
+      .select('*')
+      .order('created_at', { ascending: false });
+
+    if (error) {
+      return NextResponse.json({ error: error.message }, { status: 500 });
     }
-    return NextResponse.json(product);
-  }
 
-  return NextResponse.json(mockProducts);
+    return NextResponse.json(data || []);
+  } catch (err) {
+    return NextResponse.json(
+      { error: 'Failed to fetch products' },
+      { status: 500 }
+    );
+  }
 }

@@ -187,3 +187,7 @@ INSERT INTO laptops (brand, model, cpu, ram, storage, gpu, screen, condition, pr
   '{"processor":"Intel Core i7-12700H (2.3GHz base, 4.7GHz boost)","memory":"16GB DDR5-4800MHz (2x8GB)","storage":"1TB PCIe Gen4 NVMe SSD","graphics":"NVIDIA GeForce RTX 3060 6GB GDDR6","display":"15.6\" FHD (1920x1080) IPS 120Hz","os":"Windows 11 Home","weight":"2.6 kg","battery":"56Wh 3-cell","warranty":"1 year international"}'::jsonb,
   '2024-01-20'
 );
+
+
+ALTER TABLE laptops ADD COLUMN IF NOT EXISTS offer_id UUID REFERENCES public.vendor_offers(id) ON DELETE SET NULL;
+CREATE INDEX IF NOT EXISTS idx_laptops_offer_id ON laptops(offer_id);
