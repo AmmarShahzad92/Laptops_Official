@@ -23,7 +23,13 @@ CREATE INDEX IF NOT EXISTS idx_users_email ON users(email);
 CREATE OR REPLACE FUNCTION update_updated_at()
 RETURNS TRIGGER AS $$
 BEGIN
-  NEW.updated_at = NOW();
+  BEGIN
+    NEW.updated_at = NOW();
+  EXCEPTION
+    WHEN undefined_column THEN
+      -- Allow reuse on tables that do not define updated_at.
+      NULL;
+  END;
   RETURN NEW;
 END;
 $$ LANGUAGE plpgsql;
@@ -38,6 +44,13 @@ ALTER TABLE users ENABLE ROW LEVEL SECURITY;
 
 CREATE POLICY "Allow all operations on users" ON users
   FOR ALL USING (true) WITH CHECK (true);
+
+-- Migration for existing databases created before `username` existed.
+ALTER TABLE users ADD COLUMN IF NOT EXISTS username TEXT;
+UPDATE users
+SET username = split_part(email, '@', 1)
+WHERE username IS NULL OR trim(username) = '';
+ALTER TABLE users ALTER COLUMN username SET NOT NULL;
 
 
 -- ─── 2. LAPTOPS TABLE ───────────────────────────────

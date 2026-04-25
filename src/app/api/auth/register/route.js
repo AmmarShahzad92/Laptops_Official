@@ -2,6 +2,25 @@ import { NextResponse } from 'next/server';
 import { supabase } from '@/lib/supabase';
 import { memRegister, hashPassword } from '@/lib/memStore';
 
+function isMissingUsernameColumn(error) {
+  return (
+    error &&
+    typeof error.message === 'string' &&
+    error.message.includes("Could not find the 'username' column")
+  );
+}
+
+function normalizeUser(user, fallbackUsername = null) {
+  if (!user) return user;
+  return {
+    ...user,
+    username:
+      user.username ||
+      fallbackUsername ||
+      (user.email ? String(user.email).split('@')[0] : null),
+  };
+}
+
 /**
  * POST /api/auth/register
  *
@@ -39,15 +58,39 @@ export async function POST(request) {
 
       const passwordHash = await hashPassword(password);
 
-      const { data: user, error } = await supabase
+      const { data: userWithUsername, error: insertError } = await supabase
         .from('users')
         .insert({ username, email, password_hash: passwordHash })
         .select('id, username, email, created_at')
         .single();
 
-      if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+      if (!insertError) {
+        return NextResponse.json({ user: normalizeUser(userWithUsername, username) }, { status: 201 });
+      }
 
-      return NextResponse.json({ user }, { status: 201 });
+      // Backward compatibility for older tables that were created without `username`.
+      if (!isMissingUsernameColumn(insertError)) {
+        return NextResponse.json({ error: insertError.message }, { status: 500 });
+      }
+
+      const { data: userLegacy, error: legacyError } = await supabase
+        .from('users')
+        .insert({ email, password_hash: passwordHash })
+        .select('id, email, created_at')
+        .single();
+
+      if (legacyError) {
+        return NextResponse.json(
+          {
+            error:
+              `${legacyError.message}. Run this SQL in Supabase: ` +
+              `ALTER TABLE public.users ADD COLUMN IF NOT EXISTS username text;`,
+          },
+          { status: 500 }
+        );
+      }
+
+      return NextResponse.json({ user: normalizeUser(userLegacy, username) }, { status: 201 });
     }
 
     // ── In-memory fallback ───────────────────────────────────────────────────

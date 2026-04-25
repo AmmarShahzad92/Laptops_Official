@@ -1,6 +1,22 @@
 import { NextResponse } from 'next/server';
 import { supabase } from '@/lib/supabase';
 
+function isMissingUsernameColumn(error) {
+  return (
+    error &&
+    typeof error.message === 'string' &&
+    error.message.includes("Could not find the 'username' column")
+  );
+}
+
+function normalizeUser(user) {
+  if (!user) return user;
+  return {
+    ...user,
+    username: user.username || (user.email ? String(user.email).split('@')[0] : null),
+  };
+}
+
 export async function PUT(request) {
   try {
     const { userId, email, password } = await request.json();
@@ -34,11 +50,26 @@ export async function PUT(request) {
       .select('id, username, email, updated_at')
       .single();
 
-    if (error) {
+    if (!error && user) {
+      return NextResponse.json({ user: normalizeUser(user) });
+    }
+
+    if (!isMissingUsernameColumn(error)) {
       return NextResponse.json({ error: error.message }, { status: 500 });
     }
 
-    return NextResponse.json({ user });
+    const { data: userLegacy, error: legacyError } = await supabase
+      .from('users')
+      .update(updates)
+      .eq('id', userId)
+      .select('id, email, updated_at')
+      .single();
+
+    if (legacyError || !userLegacy) {
+      return NextResponse.json({ error: legacyError?.message || 'Unable to update user' }, { status: 500 });
+    }
+
+    return NextResponse.json({ user: normalizeUser(userLegacy) });
   } catch (err) {
     return NextResponse.json({ error: err.message }, { status: 500 });
   }
