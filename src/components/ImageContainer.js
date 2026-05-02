@@ -1,7 +1,6 @@
 import Image from 'next/image';
 import { useState } from 'react';
 
-/** Append WebP format hint to Unsplash URLs for faster CDN delivery */
 function optimizeUrl(url) {
   if (!url || !url.includes('unsplash.com')) return url;
   const base = url.split('?')[0];
@@ -27,7 +26,7 @@ export default function ImageContainer({ productImage, displayName, condition, i
           onError={() => setImageError(true)}
           priority={priority}
           loading={priority ? 'eager' : 'lazy'}
-          unoptimized={true} // Added to bypass Next.js image optimization
+          unoptimized={true}
         />
       ) : (
         <div className="flex items-center justify-center h-full">
@@ -40,14 +39,12 @@ export default function ImageContainer({ productImage, displayName, condition, i
         </div>
       )}
 
-      {/* Stock badge */}
       <div className="absolute top-3 right-3 z-20">
         <span className={`nm-badge text-xs ${availability ? 'text-[var(--nm-success)]' : 'text-[var(--nm-danger)]'}`}>
           {availability ? (qty ? `${qty} Left` : 'In Stock') : 'Out of Stock'}
         </span>
       </div>
 
-      {/* Condition badge */}
       {condition && (
         <div className="absolute bottom-3 left-3 z-20">
           <span className="nm-badge text-[var(--nm-accent)] text-xs">{condition}</span>
