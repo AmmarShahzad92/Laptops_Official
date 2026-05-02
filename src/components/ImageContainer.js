@@ -27,6 +27,7 @@ export default function ImageContainer({ productImage, displayName, condition, i
           onError={() => setImageError(true)}
           priority={priority}
           loading={priority ? 'eager' : 'lazy'}
+          unoptimized={true} // Added to bypass Next.js image optimization
         />
       ) : (
         <div className="flex items-center justify-center h-full">
