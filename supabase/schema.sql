@@ -53,6 +53,69 @@ WHERE username IS NULL OR trim(username) = '';
 ALTER TABLE users ALTER COLUMN username SET NOT NULL;
 
 
+-- ─── 1b. CUSTOMER PROFILES (Supabase Auth) ─────────────────
+-- Stores verified customer info linked to auth.users
+
+CREATE TABLE IF NOT EXISTS public.customer_profiles (
+  cust_id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  user_id UUID UNIQUE NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
+  name TEXT NOT NULL,
+  phone TEXT,
+  email TEXT NOT NULL,
+  address TEXT,
+  email_verified BOOLEAN NOT NULL DEFAULT false,
+  created_at TIMESTAMPTZ DEFAULT NOW(),
+  updated_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+CREATE TRIGGER customer_profiles_updated_at
+  BEFORE UPDATE ON public.customer_profiles
+  FOR EACH ROW
+  EXECUTE FUNCTION update_updated_at();
+
+ALTER TABLE public.customer_profiles ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "customer_profiles_select_own" ON public.customer_profiles
+  FOR SELECT USING (auth.uid() = user_id);
+
+CREATE POLICY "customer_profiles_update_own" ON public.customer_profiles
+  FOR UPDATE USING (auth.uid() = user_id)
+  WITH CHECK (auth.uid() = user_id);
+
+GRANT SELECT, UPDATE ON public.customer_profiles TO authenticated;
+
+CREATE OR REPLACE FUNCTION public.handle_verified_customer_profile()
+RETURNS TRIGGER AS $$
+BEGIN
+  IF NEW.email_confirmed_at IS NOT NULL THEN
+    INSERT INTO public.customer_profiles (user_id, name, phone, email, address, email_verified)
+    VALUES (
+      NEW.id,
+      COALESCE(NULLIF(NEW.raw_user_meta_data->>'name', ''), split_part(NEW.email, '@', 1)),
+      NULLIF(NEW.raw_user_meta_data->>'phone', ''),
+      NEW.email,
+      NULLIF(NEW.raw_user_meta_data->>'address', ''),
+      true
+    )
+    ON CONFLICT (user_id) DO UPDATE SET
+      name = EXCLUDED.name,
+      phone = EXCLUDED.phone,
+      email = EXCLUDED.email,
+      address = EXCLUDED.address,
+      email_verified = true,
+      updated_at = NOW();
+  END IF;
+  RETURN NEW;
+END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+
+DROP TRIGGER IF EXISTS on_auth_user_verified ON auth.users;
+CREATE TRIGGER on_auth_user_verified
+  AFTER INSERT OR UPDATE OF email_confirmed_at ON auth.users
+  FOR EACH ROW
+  EXECUTE FUNCTION public.handle_verified_customer_profile();
+
+
 -- ─── 2. LAPTOPS TABLE ───────────────────────────────
 
 CREATE TABLE IF NOT EXISTS laptops (
@@ -204,3 +267,82 @@ INSERT INTO laptops (brand, model, cpu, ram, storage, gpu, screen, condition, pr
 
 ALTER TABLE laptops ADD COLUMN IF NOT EXISTS offer_id UUID REFERENCES public.vendor_offers(id) ON DELETE SET NULL;
 CREATE INDEX IF NOT EXISTS idx_laptops_offer_id ON laptops(offer_id);
+  DO $$
+  BEGIN
+    IF EXISTS (
+      SELECT 1 FROM information_schema.tables
+      WHERE table_schema = 'public' AND table_name = 'inventory'
+    ) THEN
+      ALTER TABLE public.laptops
+        ADD COLUMN IF NOT EXISTS inventory_id UUID REFERENCES public.inventory(id) ON DELETE SET NULL;
+      CREATE INDEX IF NOT EXISTS idx_laptops_inventory_id ON public.laptops(inventory_id);
+    END IF;
+  END $$;
+
+
+  -- ─── 4. SHARED DB EXTENSIONS (inventory/vendor_offers images + storage) ─────
+  DO $$
+  BEGIN
+    IF EXISTS (
+      SELECT 1 FROM information_schema.tables
+      WHERE table_schema = 'public' AND table_name = 'inventory'
+    ) THEN
+      ALTER TABLE public.inventory ADD COLUMN IF NOT EXISTS images TEXT[] DEFAULT '{}';
+    END IF;
+
+    IF EXISTS (
+      SELECT 1 FROM information_schema.tables
+      WHERE table_schema = 'public' AND table_name = 'vendor_offers'
+    ) THEN
+      ALTER TABLE public.vendor_offers ADD COLUMN IF NOT EXISTS images TEXT[] DEFAULT '{}';
+    END IF;
+  END $$;
+
+  INSERT INTO storage.buckets (id, name, public)
+  VALUES ('catalog_images', 'catalog_images', true)
+  ON CONFLICT (id) DO NOTHING;
+
+  ALTER TABLE storage.objects ENABLE ROW LEVEL SECURITY;
+
+  DO $$
+  BEGIN
+    IF NOT EXISTS (
+      SELECT 1 FROM pg_policies
+      WHERE schemaname = 'storage' AND tablename = 'objects'
+        AND policyname = 'catalog_images_public_read'
+    ) THEN
+      CREATE POLICY "catalog_images_public_read" ON storage.objects
+        FOR SELECT USING (bucket_id = 'catalog_images');
+    END IF;
+
+    IF NOT EXISTS (
+      SELECT 1 FROM pg_policies
+      WHERE schemaname = 'storage' AND tablename = 'objects'
+        AND policyname = 'catalog_images_anon_insert'
+    ) THEN
+      CREATE POLICY "catalog_images_anon_insert" ON storage.objects
+        FOR INSERT TO anon WITH CHECK (bucket_id = 'catalog_images');
+    END IF;
+
+    IF NOT EXISTS (
+      SELECT 1 FROM pg_policies
+      WHERE schemaname = 'storage' AND tablename = 'objects'
+        AND policyname = 'catalog_images_anon_update'
+    ) THEN
+      CREATE POLICY "catalog_images_anon_update" ON storage.objects
+        FOR UPDATE TO anon USING (bucket_id = 'catalog_images')
+        WITH CHECK (bucket_id = 'catalog_images');
+    END IF;
+
+    IF NOT EXISTS (
+      SELECT 1 FROM pg_policies
+      WHERE schemaname = 'storage' AND tablename = 'objects'
+        AND policyname = 'catalog_images_anon_delete'
+    ) THEN
+      CREATE POLICY "catalog_images_anon_delete" ON storage.objects
+        FOR DELETE TO anon USING (bucket_id = 'catalog_images');
+    END IF;
+  END $$;
+
+  GRANT SELECT ON storage.buckets TO anon;
+  GRANT SELECT, INSERT, UPDATE, DELETE ON storage.objects TO anon;

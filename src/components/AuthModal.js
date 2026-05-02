@@ -3,8 +3,10 @@ import { useState } from 'react';
 import useAuthStore from '@/store/authStore';
 
 export default function AuthModal() {
-  const { isAuthModalOpen, closeAuth, authMode, setAuthMode, login, register } = useAuthStore();
-  const [username, setUsername] = useState('');
+  const { isAuthModalOpen, closeAuth, authMode, setAuthMode, login, register, authMessage } = useAuthStore();
+  const [name, setName] = useState('');
+  const [phone, setPhone] = useState('');
+  const [address, setAddress] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
@@ -18,11 +20,13 @@ export default function AuthModal() {
     setLoading(true);
     try {
       if (authMode === 'register') {
-        await register(username, email, password);
+        await register({ name, phone, address, email, password });
       } else {
         await login(email, password);
       }
-      setUsername('');
+      setName('');
+      setPhone('');
+      setAddress('');
       setEmail('');
       setPassword('');
     } catch (err) {
@@ -68,14 +72,42 @@ export default function AuthModal() {
         <form onSubmit={handleSubmit} className="space-y-4">
           {authMode === 'register' && (
             <div>
-              <label className="text-xs font-bold text-[var(--nm-text-secondary)] uppercase tracking-wider block mb-1.5">Username</label>
+              <label className="text-xs font-bold text-[var(--nm-text-secondary)] uppercase tracking-wider block mb-1.5">Full Name</label>
               <input
                 type="text"
                 required
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
+                value={name}
+                onChange={(e) => setName(e.target.value)}
                 className="nm-input w-full text-sm"
-                placeholder="Your name"
+                placeholder="Your full name"
+              />
+            </div>
+          )}
+
+          {authMode === 'register' && (
+            <div>
+              <label className="text-xs font-bold text-[var(--nm-text-secondary)] uppercase tracking-wider block mb-1.5">Phone</label>
+              <input
+                type="tel"
+                required
+                value={phone}
+                onChange={(e) => setPhone(e.target.value)}
+                className="nm-input w-full text-sm"
+                placeholder="e.g. +92 3xx xxx xxxx"
+              />
+            </div>
+          )}
+
+          {authMode === 'register' && (
+            <div>
+              <label className="text-xs font-bold text-[var(--nm-text-secondary)] uppercase tracking-wider block mb-1.5">Address</label>
+              <input
+                type="text"
+                required
+                value={address}
+                onChange={(e) => setAddress(e.target.value)}
+                className="nm-input w-full text-sm"
+                placeholder="Street, City"
               />
             </div>
           )}
@@ -100,10 +132,16 @@ export default function AuthModal() {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               className="nm-input w-full text-sm"
-              placeholder="Min 4 characters"
-              minLength={4}
+              placeholder="Min 8 characters"
+              minLength={8}
             />
           </div>
+
+          {authMessage && (
+            <div className="nm-inset-sm p-3 text-sm text-[var(--nm-success)] font-medium text-center">
+              {authMessage}
+            </div>
+          )}
 
           {error && (
             <div className="nm-inset-sm p-3 text-sm text-[var(--nm-danger)] font-medium text-center">

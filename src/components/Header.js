@@ -13,10 +13,11 @@ export default function Header({ searchTerm, setSearchTerm, brands, onBrandSelec
   const mobileRef = useRef(null);
   const userMenuRef = useRef(null);
   const { totalItems, setIsOpen } = useCart();
-  const { user, openAuth, logout } = useAuthStore();
+  const { user, profile, openAuth, logout, initAuth } = useAuthStore();
   const { theme, toggle } = useThemeStore();
 
   useEffect(() => {
+    initAuth();
     const handleClick = (e) => {
       if (dropdownRef.current && !dropdownRef.current.contains(e.target)) setShowDropdown(false);
       if (mobileRef.current && !mobileRef.current.contains(e.target)) setShowMobileMenu(false);
@@ -24,7 +25,7 @@ export default function Header({ searchTerm, setSearchTerm, brands, onBrandSelec
     };
     document.addEventListener('mousedown', handleClick);
     return () => document.removeEventListener('mousedown', handleClick);
-  }, []);
+  }, [initAuth]);
 
   useEffect(() => {
     document.documentElement.setAttribute('data-theme', theme);
@@ -46,6 +47,13 @@ export default function Header({ searchTerm, setSearchTerm, brands, onBrandSelec
     const el = document.querySelector('footer');
     if (el) el.scrollIntoView({ behavior: 'smooth' });
   };
+
+  const displayName =
+    profile?.name ||
+    user?.user_metadata?.name ||
+    (user?.email ? String(user.email).split('@')[0] : 'User');
+
+  const displayEmail = profile?.email || user?.email || '';
 
   return (
     <header className="sticky top-0 z-40 bg-[var(--nm-bg)]" style={{ boxShadow: '0 4px 12px var(--nm-shadow-dark)' }}>
@@ -167,9 +175,9 @@ export default function Header({ searchTerm, setSearchTerm, brands, onBrandSelec
                 >
                   {/* User avatar circle */}
                   <span className="w-5 h-5 rounded-full bg-[var(--nm-accent)] text-white text-[10px] font-bold flex items-center justify-center flex-shrink-0">
-                    {user.username?.[0]?.toUpperCase() || 'U'}
+                    {displayName?.[0]?.toUpperCase() || 'U'}
                   </span>
-                  <span className="hidden md:inline max-w-[72px] truncate font-semibold">{user.username}</span>
+                  <span className="hidden md:inline max-w-[72px] truncate font-semibold">{displayName}</span>
                   <svg className={`w-3 h-3 text-[var(--nm-text-secondary)] transition-transform hidden md:block ${showUserMenu ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                   </svg>
@@ -179,8 +187,8 @@ export default function Header({ searchTerm, setSearchTerm, brands, onBrandSelec
                   <div className="absolute top-full right-0 mt-2 nm-dropdown p-3 w-52 animate-slide-down z-50">
                     {/* User info */}
                     <div className="px-3 py-2 mb-2 nm-inset-sm">
-                      <p className="text-xs font-bold text-[var(--nm-text)] truncate">{user.username}</p>
-                      <p className="text-[10px] text-[var(--nm-text-secondary)] truncate mt-0.5">{user.email}</p>
+                      <p className="text-xs font-bold text-[var(--nm-text)] truncate">{displayName}</p>
+                      <p className="text-[10px] text-[var(--nm-text-secondary)] truncate mt-0.5">{displayEmail}</p>
                     </div>
                     {/* Sign out */}
                     <button

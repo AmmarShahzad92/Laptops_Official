@@ -1,39 +1,91 @@
 import { create } from 'zustand';
+import { supabase } from '@/lib/supabase';
 
-const useAuthStore = create((set) => ({
+async function fetchProfile(userId) {
+  if (!supabase || !userId) return null;
+  const { data, error } = await supabase
+    .from('customer_profiles')
+    .select('cust_id, name, phone, email, address')
+    .eq('user_id', userId)
+    .maybeSingle();
+  if (error) return null;
+  return data || null;
+}
+
+const useAuthStore = create((set, get) => ({
   user: null,
+  profile: null,
   isAuthModalOpen: false,
-  authMode: 'login', // 'login' | 'register'
+  authMode: 'login',
+  authMessage: '',
+  initialized: false,
 
-  openAuth: (mode = 'login') => set({ isAuthModalOpen: true, authMode: mode }),
-  closeAuth: () => set({ isAuthModalOpen: false }),
-  setAuthMode: (mode) => set({ authMode: mode }),
+  initAuth: async () => {
+    const { initialized } = get();
+    if (initialized) return;
+    set({ initialized: true });
+    if (!supabase) return;
+
+    const { data } = await supabase.auth.getSession();
+    if (data?.session?.user) {
+      const profile = await fetchProfile(data.session.user.id);
+      set({ user: data.session.user, profile });
+    }
+
+    supabase.auth.onAuthStateChange(async (_event, session) => {
+      if (!session?.user) {
+        set({ user: null, profile: null });
+        return;
+      }
+      const profile = await fetchProfile(session.user.id);
+      set({ user: session.user, profile });
+    });
+  },
+
+  openAuth: (mode = 'login') => set({ isAuthModalOpen: true, authMode: mode, authMessage: '' }),
+  closeAuth: () => set({ isAuthModalOpen: false, authMessage: '' }),
+  setAuthMode: (mode) => set({ authMode: mode, authMessage: '' }),
 
   login: async (email, password) => {
-    const res = await fetch('/api/auth/login', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email, password }),
+    if (!supabase) throw new Error('Auth is not configured.');
+    const { data, error } = await supabase.auth.signInWithPassword({
+      email,
+      password,
     });
-    const data = await res.json();
-    if (!res.ok) throw new Error(data.error || 'Login failed');
-    set({ user: data.user, isAuthModalOpen: false });
+    if (error || !data?.user) {
+      throw new Error('Unable to sign in. Check your credentials.');
+    }
+    const profile = await fetchProfile(data.user.id);
+    set({ user: data.user, profile, isAuthModalOpen: false, authMessage: '' });
     return data.user;
   },
 
-  register: async (username, email, password) => {
-    const res = await fetch('/api/auth/register', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ username, email, password }),
+  register: async ({ name, phone, address, email, password }) => {
+    if (!supabase) throw new Error('Auth is not configured.');
+    const { error } = await supabase.auth.signUp({
+      email,
+      password,
+      options: {
+        emailRedirectTo: typeof window !== 'undefined' ? window.location.origin : undefined,
+        data: {
+          name,
+          phone,
+          address,
+        },
+      },
     });
-    const data = await res.json();
-    if (!res.ok) throw new Error(data.error || 'Registration failed');
-    set({ user: data.user, isAuthModalOpen: false });
-    return data.user;
+    if (error) {
+      throw new Error('Unable to sign up. Please try again.');
+    }
+    set({ authMessage: 'Check your email to verify your account.', isAuthModalOpen: true });
   },
 
-  logout: () => set({ user: null }),
+  logout: async () => {
+    if (supabase) {
+      await supabase.auth.signOut();
+    }
+    set({ user: null, profile: null });
+  },
 }));
 
 export default useAuthStore;
