@@ -1,5 +1,5 @@
 import Image from 'next/image';
-import { useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 
 function optimizeUrl(url) {
   if (!url || !url.includes('unsplash.com')) return url;
@@ -9,25 +9,71 @@ function optimizeUrl(url) {
 
 export default function ImageContainer({ productImage, displayName, condition, images, availability, qty, priority = false }) {
   const [imageError, setImageError] = useState(false);
-  const optimized = optimizeUrl(productImage);
+  const [activeIndex, setActiveIndex] = useState(0);
+  const [hovering, setHovering] = useState(false);
+  const [aspectRatio, setAspectRatio] = useState(4 / 3);
+
+  const imageList = useMemo(() => {
+    const list = Array.isArray(images) ? images.filter(Boolean) : [];
+    if (!list.length && productImage) list.push(productImage);
+    return list;
+  }, [images, productImage]);
+
+  useEffect(() => {
+    if (!hovering || imageList.length < 2) return;
+    const intervalId = setInterval(() => {
+      setActiveIndex((prev) => (prev + 1) % imageList.length);
+    }, 1600);
+    return () => clearInterval(intervalId);
+  }, [hovering, imageList.length]);
+
+  useEffect(() => {
+    setActiveIndex(0);
+  }, [imageList.length]);
+
+  const handleImageLoad = (img) => {
+    if (!img?.naturalWidth || !img?.naturalHeight) return;
+    const ratio = img.naturalWidth / img.naturalHeight;
+    const clamped = Math.max(0.65, Math.min(1.6, ratio));
+    setAspectRatio(clamped);
+  };
 
   return (
     <div
-      className="relative h-48 overflow-hidden"
-      style={{ borderRadius: '20px 20px 0 0', background: 'linear-gradient(145deg, var(--nm-shadow-dark), var(--nm-bg))' }}
+      className="relative overflow-hidden"
+      style={{
+        borderRadius: '20px 20px 0 0',
+        background: 'linear-gradient(145deg, var(--nm-shadow-dark), var(--nm-bg))',
+        aspectRatio,
+      }}
+      onMouseEnter={() => setHovering(true)}
+      onMouseLeave={() => { setHovering(false); setActiveIndex(0); }}
     >
-      {images?.[0] && !imageError ? (
-        <Image
-          src={optimized || productImage}
-          alt={displayName}
-          fill
-          className="object-cover group-hover:scale-105 transition-transform duration-500"
-          sizes="(max-width: 640px) 92vw, (max-width: 1024px) 44vw, (max-width: 1280px) 30vw, 22vw"
-          onError={() => setImageError(true)}
-          priority={priority}
-          loading={priority ? 'eager' : 'lazy'}
-          unoptimized={true}
-        />
+      {imageList.length && !imageError ? (
+        <div
+          className="absolute inset-0 flex"
+          style={{
+            transform: `translateX(-${activeIndex * 100}%)`,
+            transition: 'transform 0.6s ease',
+          }}
+        >
+          {imageList.map((src, idx) => (
+            <div key={`${src}-${idx}`} className="relative w-full h-full flex-shrink-0" style={{ flex: '0 0 100%' }}>
+              <Image
+                src={optimizeUrl(src) || src}
+                alt={displayName}
+                fill
+                className="object-cover group-hover:scale-105 transition-transform duration-500"
+                sizes="(max-width: 640px) 92vw, (max-width: 1024px) 44vw, (max-width: 1280px) 30vw, 22vw"
+                onError={() => setImageError(true)}
+                onLoadingComplete={idx === 0 ? handleImageLoad : undefined}
+                priority={priority && idx === 0}
+                loading={priority && idx === 0 ? 'eager' : 'lazy'}
+                unoptimized={true}
+              />
+            </div>
+          ))}
+        </div>
       ) : (
         <div className="flex items-center justify-center h-full">
           <div className="text-[var(--nm-shadow-dark)] text-center">

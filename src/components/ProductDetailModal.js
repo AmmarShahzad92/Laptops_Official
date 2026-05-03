@@ -90,6 +90,7 @@ export default function ProductDetailModal({ products, initialIndex, onClose }) 
                   fill
                   className="object-cover"
                   sizes="(max-width: 768px) 100vw, 50vw"
+                  unoptimized={true}
                 />
               ) : (
                 <div className="flex items-center justify-center h-full text-[var(--nm-shadow-dark)]">
@@ -109,7 +110,7 @@ export default function ProductDetailModal({ products, initialIndex, onClose }) 
                     onClick={() => setActiveImage(i)}
                     className={`relative w-14 h-14 rounded-lg overflow-hidden transition-all ${activeImage === i ? 'nm-inset-sm ring-2 ring-[var(--nm-accent)]' : 'nm-raised-sm'}`}
                   >
-                    <Image src={img} alt="" fill className="object-cover" sizes="56px" />
+                    <Image src={img} alt="" fill className="object-cover" sizes="56px" unoptimized={true} />
                   </button>
                 ))}
               </div>
