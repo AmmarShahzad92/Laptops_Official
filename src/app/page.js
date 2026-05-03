@@ -28,6 +28,7 @@ export default function Home() {
       const { data, error } = await supabase
         .from('laptops')
         .select('*')
+        .eq('status', 'live')
         .order('created_at', { ascending: false });
 
       if (error) {

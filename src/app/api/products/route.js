@@ -29,6 +29,7 @@ export async function GET(request) {
     const { data, error } = await supabase
       .from('laptops')
       .select('*')
+      .eq('status', 'live')
       .order('created_at', { ascending: false });
 
     if (error) {

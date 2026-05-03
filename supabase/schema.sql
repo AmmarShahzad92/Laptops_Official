@@ -191,105 +191,105 @@ ALTER TABLE laptops ALTER COLUMN screen DROP NOT NULL;
 
 INSERT INTO laptops (brand, model, cpu, ram, storage, gpu, screen, condition, price, qty, images, highlights, specs, created_at) VALUES
 (
-  'HP', 'OMEN 16', 'Intel Core i5-12500H', '16GB DDR4', '512GB NVMe SSD', 'RTX 4060 8GB', '16.1" QHD 165Hz', 'New', 275000, 2,
+  'HP', 'OMEN 16', 'Intel Core i5-12500H', '16GB DDR4', jsonb_build_object('primary', '512GB NVMe SSD'), jsonb_build_object('integrated', 'RTX 4060 8GB'), '16.1" QHD 165Hz', 'New', 275000, 2,
   ARRAY['https://images.unsplash.com/photo-1541807084-5c52b6b3adef?auto=format&fit=crop&w=800&q=80','https://images.unsplash.com/photo-1612287230202-1ff1d85d1fc8?auto=format&fit=crop&w=800&q=80','https://images.unsplash.com/photo-1588872657578-7efd1f1555ed?auto=format&fit=crop&w=800&q=80'],
   ARRAY['QHD 165Hz Display','OMEN Cryo Chamber Cooling','4-Zone RGB Keyboard'],
   '{"processor":"Intel Core i5-12500H (2.5GHz base, 4.5GHz boost)","memory":"16GB DDR4-3200MHz (2x8GB)","storage":"512GB PCIe Gen4 NVMe SSD","graphics":"NVIDIA GeForce RTX 4060 8GB GDDR6","display":"16.1\" QHD (2560x1440) IPS 165Hz G-SYNC","os":"Windows 11 Home","weight":"2.3 kg","battery":"83Wh 6-cell","warranty":"1 year international"}'::jsonb,
   '2024-01-10'
 ),
 (
-  'Lenovo', 'Legion 5 Pro', 'AMD Ryzen 7 7735HS', '32GB DDR5', '1TB NVMe SSD', 'RTX 4070 8GB', '16" WQXGA 165Hz', 'New', 395000, 1,
+  'Lenovo', 'Legion 5 Pro', 'AMD Ryzen 7 7735HS', '32GB DDR5', jsonb_build_object('primary', '1TB NVMe SSD'), jsonb_build_object('integrated', 'RTX 4070 8GB'), '16" WQXGA 165Hz', 'New', 395000, 1,
   ARRAY['https://images.unsplash.com/photo-1602080858428-57174f9431cf?auto=format&fit=crop&w=800&q=80','https://images.unsplash.com/photo-1591799265444-01c2d8daf544?auto=format&fit=crop&w=800&q=80','https://images.unsplash.com/photo-1548690312-e3b507d8cc1d?auto=format&fit=crop&w=800&q=80'],
   ARRAY['WQXGA High Resolution','Legion Coldfront 5.0','RGB Backlit Keyboard'],
   '{"processor":"AMD Ryzen 7 7735HS (3.2GHz base, 4.75GHz boost)","memory":"32GB DDR5-4800MHz (2x16GB)","storage":"1TB PCIe Gen4 NVMe SSD","graphics":"NVIDIA GeForce RTX 4070 8GB GDDR6","display":"16\" WQXGA (2560x1600) IPS 165Hz G-SYNC","os":"Windows 11 Home","weight":"2.5 kg","battery":"80Wh 4-cell","warranty":"2 years international"}'::jsonb,
   '2024-01-08'
 ),
 (
-  'Alienware', 'X17', 'Intel Core i9-12900HK', '32GB DDR5', '2TB NVMe SSD', 'RTX 4080 12GB', '17.3" UHD 120Hz', 'New', 650000, 1,
+  'Alienware', 'X17', 'Intel Core i9-12900HK', '32GB DDR5', jsonb_build_object('primary', '2TB NVMe SSD'), jsonb_build_object('integrated', 'RTX 4080 12GB'), '17.3" UHD 120Hz', 'New', 650000, 1,
   ARRAY['https://images.unsplash.com/photo-1541807084-5c52b6b3adef?auto=format&fit=crop&w=800&q=80','https://images.unsplash.com/photo-1618424181497-157f25b6ddd5?auto=format&fit=crop&w=800&q=80','https://images.unsplash.com/photo-1602080858428-57174f9431cf?auto=format&fit=crop&w=800&q=80'],
   ARRAY['4K UHD Display','Alienware Command Center','Advanced Liquid Cooling'],
   '{"processor":"Intel Core i9-12900HK (2.5GHz base, 5.0GHz boost)","memory":"32GB DDR5-4800MHz (2x16GB)","storage":"2TB PCIe Gen4 NVMe SSD","graphics":"NVIDIA GeForce RTX 4080 12GB GDDR6X","display":"17.3\" UHD (3840x2160) IPS 120Hz G-SYNC","os":"Windows 11 Pro","weight":"3.0 kg","battery":"97Wh 6-cell","warranty":"3 years premium support"}'::jsonb,
   '2024-01-05'
 ),
 (
-  'Asus', 'ROG Zephyrus G15', 'AMD Ryzen 9 6900HS', '16GB DDR5', '1TB NVMe SSD', 'RTX 3080 8GB', '15.6" QHD 165Hz', 'New', 320000, 3,
+  'Asus', 'ROG Zephyrus G15', 'AMD Ryzen 9 6900HS', '16GB DDR5', jsonb_build_object('primary', '1TB NVMe SSD'), jsonb_build_object('integrated', 'RTX 3080 8GB'), '15.6" QHD 165Hz', 'New', 320000, 3,
   ARRAY['https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=800&q=80','https://images.unsplash.com/photo-1611532736597-de2d4265fba3?auto=format&fit=crop&w=800&q=80','https://images.unsplash.com/photo-1548690312-e3b507d8cc1d?auto=format&fit=crop&w=800&q=80'],
   ARRAY['Slim Lightweight Design','Adaptive-Sync Display','Excellent Cooling'],
   '{"processor":"AMD Ryzen 9 6900HS (3.3GHz base, 4.9GHz boost)","memory":"16GB DDR5-4800MHz","storage":"1TB PCIe Gen4 NVMe SSD","graphics":"NVIDIA GeForce RTX 3080 8GB GDDR6","display":"15.6\" QHD (2560x1440) IPS 165Hz Adaptive-Sync","os":"Windows 11 Home","weight":"1.9 kg","battery":"90Wh 4-cell","warranty":"1 year international"}'::jsonb,
   '2024-01-02'
 ),
 (
-  'MSI', 'Raider GE77', 'Intel Core i9-13980HX', '32GB DDR5', '2TB NVMe SSD', 'RTX 4090 16GB', '17.3" QHD 240Hz', 'New', 720000, 1,
+  'MSI', 'Raider GE77', 'Intel Core i9-13980HX', '32GB DDR5', jsonb_build_object('primary', '2TB NVMe SSD'), jsonb_build_object('integrated', 'RTX 4090 16GB'), '17.3" QHD 240Hz', 'New', 720000, 1,
   ARRAY['https://images.unsplash.com/photo-1559163499-413811fb2344?auto=format&fit=crop&w=800&q=80','https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=800&q=80','https://images.unsplash.com/photo-1588872657578-7efd1f1555ed?auto=format&fit=crop&w=800&q=80'],
   ARRAY['240Hz Gaming Display','SteelSeries RGB Keyboard','Cooler Boost 5'],
   '{"processor":"Intel Core i9-13980HX (2.2GHz base, 5.6GHz boost)","memory":"32GB DDR5-5600MHz","storage":"2TB PCIe Gen4 NVMe SSD","graphics":"NVIDIA GeForce RTX 4090 16GB GDDR6X","display":"17.3\" QHD (2560x1440) IPS 240Hz","os":"Windows 11 Pro","weight":"3.2 kg","battery":"99Wh 6-cell","warranty":"2 years international"}'::jsonb,
   '2024-01-04'
 ),
 (
-  'Apple', 'MacBook Pro 16" M2 Max', 'Apple M2 Max', '32GB Unified', '1TB SSD', 'M2 Max 38-core GPU', '16.2" Liquid Retina XDR', 'New', 600000, 2,
+  'Apple', 'MacBook Pro 16" M2 Max', 'Apple M2 Max', '32GB Unified', jsonb_build_object('primary', '1TB SSD'), jsonb_build_object('integrated', 'M2 Max 38-core GPU'), '16.2" Liquid Retina XDR', 'New', 600000, 2,
   ARRAY['https://images.unsplash.com/photo-1517336714731-489689fd1ca8?auto=format&fit=crop&w=800&q=80','https://images.unsplash.com/photo-1537498425277-c283d32ef9df?auto=format&fit=crop&w=800&q=80','https://images.unsplash.com/photo-1546094086-594c87b144be?auto=format&fit=crop&w=800&q=80'],
   ARRAY['Liquid Retina XDR Display','Studio-Grade Performance','Up to 21 Hours Battery'],
   '{"processor":"Apple M2 Max 12-core CPU (8 performance, 4 efficiency)","memory":"32GB Unified Memory","storage":"1TB SSD","graphics":"Apple M2 Max 38-core GPU","display":"16.2\" Liquid Retina XDR (3456x2234) Mini-LED 120Hz","os":"macOS Ventura","weight":"2.2 kg","battery":"Up to 21 hours video playback","warranty":"1 year limited warranty"}'::jsonb,
   '2024-01-01'
 ),
 (
-  'Razer', 'Blade 15 Advanced', 'Intel Core i7-13800H', '16GB DDR5', '1TB NVMe SSD', 'RTX 4070 8GB', '15.6" QHD 240Hz', 'New', 420000, 2,
+  'Razer', 'Blade 15 Advanced', 'Intel Core i7-13800H', '16GB DDR5', jsonb_build_object('primary', '1TB NVMe SSD'), jsonb_build_object('integrated', 'RTX 4070 8GB'), '15.6" QHD 240Hz', 'New', 420000, 2,
   ARRAY['https://images.unsplash.com/photo-1593640408182-31c70c8268f5?auto=format&fit=crop&w=800&q=80','https://images.unsplash.com/photo-1541807084-5c52b6b3adef?auto=format&fit=crop&w=800&q=80','https://images.unsplash.com/photo-1618424181497-157f25b6ddd5?auto=format&fit=crop&w=800&q=80'],
   ARRAY['Ultra-Thin CNC Aluminum','Chroma RGB Keyboard','240Hz Gaming Display'],
   '{"processor":"Intel Core i7-13800H (2.4GHz base, 5.2GHz boost)","memory":"16GB DDR5-5200MHz","storage":"1TB PCIe Gen4 NVMe SSD","graphics":"NVIDIA GeForce RTX 4070 8GB GDDR6","display":"15.6\" QHD (2560x1440) IPS 240Hz","os":"Windows 11 Home","weight":"2.0 kg","battery":"80Wh 4-cell","warranty":"1 year international"}'::jsonb,
   '2024-01-07'
 ),
 (
-  'Dell', 'XPS 15 OLED', 'Intel Core i7-12700H', '16GB DDR5', '1TB NVMe SSD', 'RTX 3050 Ti 4GB', '15.6" 3.5K OLED Touch', 'New', 310000, 3,
+  'Dell', 'XPS 15 OLED', 'Intel Core i7-12700H', '16GB DDR5', jsonb_build_object('primary', '1TB NVMe SSD'), jsonb_build_object('integrated', 'RTX 3050 Ti 4GB'), '15.6" 3.5K OLED Touch', 'New', 310000, 3,
   ARRAY['https://images.unsplash.com/photo-1515879218367-8466d910aaa4?auto=format&fit=crop&w=800&q=80','https://images.unsplash.com/photo-1484788984921-03950022c9ef?auto=format&fit=crop&w=800&q=80','https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=800&q=80'],
   ARRAY['OLED Touch Display','Premium Aluminum Design','Long Battery Life'],
   '{"processor":"Intel Core i7-12700H (2.3GHz base, 4.7GHz boost)","memory":"16GB DDR5-4800MHz","storage":"1TB PCIe Gen4 NVMe SSD","graphics":"NVIDIA GeForce RTX 3050 Ti 4GB GDDR6","display":"15.6\" 3.5K OLED Touch (3456x2160)","os":"Windows 11 Pro","weight":"1.9 kg","battery":"86Wh 6-cell","warranty":"1 year premium support"}'::jsonb,
   '2024-01-09'
 ),
 (
-  'Acer', 'Swift X 14', 'Intel Core i7-13700H', '16GB DDR5', '1TB NVMe SSD', 'RTX 4050 6GB', '14.5" 3K OLED 120Hz', 'New', 345000, 2,
+  'Acer', 'Swift X 14', 'Intel Core i7-13700H', '16GB DDR5', jsonb_build_object('primary', '1TB NVMe SSD'), jsonb_build_object('integrated', 'RTX 4050 6GB'), '14.5" 3K OLED 120Hz', 'New', 345000, 2,
   ARRAY['https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=800&q=80','https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=800&q=80','https://images.unsplash.com/photo-1542393545-10f5cde2c810?auto=format&fit=crop&w=800&q=80'],
   ARRAY['3K OLED Display','Lightweight Metal Chassis','NVIDIA Studio Ready'],
   '{"processor":"Intel Core i7-13700H (2.4GHz base, 5.0GHz boost)","memory":"16GB DDR5-5200MHz","storage":"1TB PCIe Gen4 NVMe SSD","graphics":"NVIDIA GeForce RTX 4050 6GB GDDR6","display":"14.5\" 3K (2880x1800) OLED 120Hz","os":"Windows 11 Home","weight":"1.4 kg","battery":"76Wh 4-cell","warranty":"1 year international"}'::jsonb,
   '2024-01-12'
 ),
 (
-  'Gigabyte', 'Aorus 17', 'Intel Core i7-13700H', '32GB DDR5', '1TB NVMe SSD', 'RTX 4070 8GB', '17.3" QHD 240Hz', 'New', 450000, 1,
+  'Gigabyte', 'Aorus 17', 'Intel Core i7-13700H', '32GB DDR5', jsonb_build_object('primary', '1TB NVMe SSD'), jsonb_build_object('integrated', 'RTX 4070 8GB'), '17.3" QHD 240Hz', 'New', 450000, 1,
   ARRAY['https://images.unsplash.com/photo-1602080858428-57174f9431cf?auto=format&fit=crop&w=800&q=80'],
   ARRAY['240Hz Display','Advanced Cooling','RGB Keyboard'],
   '{"processor":"Intel Core i7-13700H (2.4GHz base, 5.0GHz boost)","memory":"32GB DDR5-4800MHz (2x16GB)","storage":"1TB PCIe Gen4 NVMe SSD","graphics":"NVIDIA GeForce RTX 4070 8GB GDDR6","display":"17.3\" QHD (2560x1440) IPS 240Hz","os":"Windows 11 Home","weight":"2.8 kg","battery":"99Wh 6-cell","warranty":"1 year international"}'::jsonb,
   '2024-01-15'
 ),
 (
-  'Samsung', 'Galaxy Book3 Ultra', 'Intel Core i9-13900H', '32GB DDR5', '1TB SSD', 'RTX 4070 8GB', '16" 3K AMOLED 120Hz', 'New', 500000, 2,
+  'Samsung', 'Galaxy Book3 Ultra', 'Intel Core i9-13900H', '32GB DDR5', jsonb_build_object('primary', '1TB SSD'), jsonb_build_object('integrated', 'RTX 4070 8GB'), '16" 3K AMOLED 120Hz', 'New', 500000, 2,
   ARRAY['https://images.unsplash.com/photo-1602080858428-57174f9431cf?auto=format&fit=crop&w=800&q=80'],
   ARRAY['AMOLED Display','S Pen Support','Lightweight'],
   '{"processor":"Intel Core i9-13900H (2.6GHz base, 5.4GHz boost)","memory":"32GB DDR5-5200MHz","storage":"1TB PCIe Gen4 NVMe SSD","graphics":"NVIDIA GeForce RTX 4070 8GB GDDR6","display":"16\" 3K (2880x1800) AMOLED 120Hz","os":"Windows 11 Pro","weight":"1.8 kg","battery":"76Wh 4-cell","warranty":"1 year international"}'::jsonb,
   '2024-01-16'
 ),
 (
-  'HP', 'Pavilion Gaming 15', 'AMD Ryzen 5 5600H', '16GB DDR4', '512GB SSD', 'RTX 3050 4GB', '15.6" FHD 144Hz', 'New', 200000, 4,
+  'HP', 'Pavilion Gaming 15', 'AMD Ryzen 5 5600H', '16GB DDR4', jsonb_build_object('primary', '512GB SSD'), jsonb_build_object('integrated', 'RTX 3050 4GB'), '15.6" FHD 144Hz', 'New', 200000, 4,
   ARRAY['https://images.unsplash.com/photo-1541807084-5c52b6b3adef?auto=format&fit=crop&w=800&q=80'],
   ARRAY['144Hz Display','Dual Fan Cooling','Bang & Olufsen Audio'],
   '{"processor":"AMD Ryzen 5 5600H (3.3GHz base, 4.2GHz boost)","memory":"16GB DDR4-3200MHz (2x8GB)","storage":"512GB PCIe NVMe SSD","graphics":"NVIDIA GeForce RTX 3050 4GB GDDR6","display":"15.6\" FHD (1920x1080) IPS 144Hz","os":"Windows 11 Home","weight":"2.2 kg","battery":"52.5Wh 3-cell","warranty":"1 year international"}'::jsonb,
   '2024-01-17'
 ),
 (
-  'Lenovo', 'IdeaPad Gaming 3', 'AMD Ryzen 7 6800H', '16GB DDR5', '512GB SSD', 'RTX 3050 Ti 4GB', '15.6" QHD 165Hz', 'New', 250000, 3,
+  'Lenovo', 'IdeaPad Gaming 3', 'AMD Ryzen 7 6800H', '16GB DDR5', jsonb_build_object('primary', '512GB SSD'), jsonb_build_object('integrated', 'RTX 3050 Ti 4GB'), '15.6" QHD 165Hz', 'New', 250000, 3,
   ARRAY['https://images.unsplash.com/photo-1602080858428-57174f9431cf?auto=format&fit=crop&w=800&q=80','https://images.unsplash.com/photo-1591799265444-01c2d8daf544?auto=format&fit=crop&w=800&q=80','https://images.unsplash.com/photo-1612287230202-1ff1d85d1fc8?auto=format&fit=crop&w=800&q=80'],
   ARRAY['High Refresh Rate','MUX Switch','RGB Keyboard'],
   '{"processor":"AMD Ryzen 7 6800H (3.2GHz base, 4.7GHz boost)","memory":"16GB DDR5-4800MHz (2x8GB)","storage":"512GB PCIe Gen4 NVMe SSD","graphics":"NVIDIA GeForce RTX 3050 Ti 4GB GDDR6","display":"15.6\" QHD (2560x1440) IPS 165Hz","os":"Windows 11 Home","weight":"2.3 kg","battery":"60Wh 3-cell","warranty":"1 year international"}'::jsonb,
   '2024-01-18'
 ),
 (
-  'MSI', 'Thin GF63', 'Intel Core i5-12450H', '16GB DDR4', '512GB SSD', 'RTX 4050 6GB', '15.6" FHD 144Hz', 'New', 220000, 5,
+  'MSI', 'Thin GF63', 'Intel Core i5-12450H', '16GB DDR4', jsonb_build_object('primary', '512GB SSD'), jsonb_build_object('integrated', 'RTX 4050 6GB'), '15.6" FHD 144Hz', 'New', 220000, 5,
   ARRAY['https://images.unsplash.com/photo-1588872657578-7efd1f1555ed?auto=format&fit=crop&w=800&q=80'],
   ARRAY['Thin Design','Cooler Boost','Nahimic Audio'],
   '{"processor":"Intel Core i5-12450H (2.0GHz base, 4.4GHz boost)","memory":"16GB DDR4-3200MHz (2x8GB)","storage":"512GB PCIe NVMe SSD","graphics":"NVIDIA GeForce RTX 4050 6GB GDDR6","display":"15.6\" FHD (1920x1080) IPS 144Hz","os":"Windows 11 Home","weight":"1.9 kg","battery":"51Wh 3-cell","warranty":"1 year international"}'::jsonb,
   '2024-01-19'
 ),
 (
-  'Dell', 'G15', 'Intel Core i7-12700H', '16GB DDR5', '1TB SSD', 'RTX 3060 6GB', '15.6" FHD 120Hz', 'New', 280000, 2,
+  'Dell', 'G15', 'Intel Core i7-12700H', '16GB DDR5', jsonb_build_object('primary', '1TB SSD'), jsonb_build_object('integrated', 'RTX 3060 6GB'), '15.6" FHD 120Hz', 'New', 280000, 2,
   ARRAY['https://images.unsplash.com/photo-1618424181497-157f25b6ddd5?auto=format&fit=crop&w=800&q=80','https://images.unsplash.com/photo-1602080858428-57174f9431cf?auto=format&fit=crop&w=800&q=80'],
   ARRAY['Alienware Inspired','Game Shift Key','Dolby Audio'],
   '{"processor":"Intel Core i7-12700H (2.3GHz base, 4.7GHz boost)","memory":"16GB DDR5-4800MHz (2x8GB)","storage":"1TB PCIe Gen4 NVMe SSD","graphics":"NVIDIA GeForce RTX 3060 6GB GDDR6","display":"15.6\" FHD (1920x1080) IPS 120Hz","os":"Windows 11 Home","weight":"2.6 kg","battery":"56Wh 3-cell","warranty":"1 year international"}'::jsonb,
