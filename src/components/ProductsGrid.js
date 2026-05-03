@@ -34,7 +34,7 @@ export default function ProductsGrid({ products, searchTerm, setSearchTerm, sele
   }, [products, searchTerm, selectedBrand, selectedScreenSize, maxPrice, selectedCpu]);
 
   const screenSizes = [...new Set(products.map(p => p.screen.split('"')[0] + '"'))];
-  const brands = [...new Set(products.map(p => p.brand))];
+  const brands = [...new Set(products.map(p => p.brand))].sort((a, b) => a.localeCompare(b));
   const cpuTypes = [
     ...new Set(
       products.flatMap(p => {
@@ -54,7 +54,7 @@ export default function ProductsGrid({ products, searchTerm, setSearchTerm, sele
       })
     )
   ];
-  
+
   return (
     <>
       <section id="products-grid" className="py-6 md:py-8">
@@ -73,7 +73,7 @@ export default function ProductsGrid({ products, searchTerm, setSearchTerm, sele
                   <option key={brand} value={brand}>{brand}</option>
                 ))}
               </select>
-              
+
               <select
                 value={selectedCpu}
                 onChange={(e) => setSelectedCpu(e.target.value)}
@@ -104,7 +104,7 @@ export default function ProductsGrid({ products, searchTerm, setSearchTerm, sele
                 className="nm-input text-sm w-32"
               />
 
-              
+
 
               {(selectedBrand || selectedScreenSize || searchTerm || maxPrice || selectedCpu) && (
                 <button
@@ -125,7 +125,7 @@ export default function ProductsGrid({ products, searchTerm, setSearchTerm, sele
 
       <main className="container mx-auto px-4 md:px-6 pb-12">
         {filteredProducts.length > 0 ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 md:gap-8 mb-16">
+          <div className="masonry-grid mb-16">
             {filteredProducts.map((product, idx) => (
               <ProductCard
                 key={product.id}

@@ -82,9 +82,7 @@ export default function Header({ searchTerm, setSearchTerm, brands, onBrandSelec
           </div>
 
           {/* Desktop Nav */}
-          <nav className="hidden lg:flex items-center gap-2">
-            <button onClick={scrollToProducts} className="nm-btn px-4 py-2 text-sm">Featured</button>
-
+          <nav className="hidden lg:flex items-center gap-3">
             <div ref={dropdownRef} className="relative">
               <button
                 onMouseEnter={() => setShowDropdown(true)}
@@ -221,7 +219,6 @@ export default function Header({ searchTerm, setSearchTerm, brands, onBrandSelec
               </button>
               {showMobileMenu && (
                 <div className="absolute top-full right-0 mt-2 nm-dropdown p-3 min-w-[220px] animate-slide-down z-50">
-                  <button onClick={() => { scrollToProducts(); setShowMobileMenu(false); }} className="w-full text-left px-3 py-2.5 text-sm font-medium text-[var(--nm-text)] rounded-lg hover:bg-[var(--nm-shadow-light)]">Featured</button>
                   <p className="text-xs font-bold text-[var(--nm-text-secondary)] uppercase tracking-wider mt-2 mb-1 px-2">Brands</p>
                   {brands?.map(brand => (
                     <button key={brand} onClick={() => handleBrandClick(brand)} className="w-full text-left px-3 py-2 text-sm font-medium text-[var(--nm-text)] hover:text-[var(--nm-accent)] rounded-lg hover:bg-[var(--nm-shadow-light)]">

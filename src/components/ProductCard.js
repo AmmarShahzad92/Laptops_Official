@@ -58,7 +58,7 @@ export default function ProductCard({ product, onViewDetail }) {
   const formatPrice = (p) => new Intl.NumberFormat('en-PK', { style: 'currency', currency: 'PKR', minimumFractionDigits: 0, maximumFractionDigits: 0 }).format(p);
 
   return (
-    <article className="nm-card group">
+    <article className="nm-card group masonry-item">
       <ImageContainer {...ImageDetails} />
 
       <div className="p-4">
@@ -101,11 +101,10 @@ export default function ProductCard({ product, onViewDetail }) {
               <button
                 key={opt}
                 onClick={() => setSelectedRam(opt)}
-                className={`px-2.5 py-1 text-xs font-semibold rounded-lg transition-all ${
-                  selectedRam === opt
+                className={`px-2.5 py-1 text-xs font-semibold rounded-lg transition-all ${selectedRam === opt
                     ? 'nm-btn-accent text-white'
                     : 'nm-btn text-[var(--nm-text-secondary)]'
-                }`}
+                  }`}
                 style={{ borderRadius: '8px', boxShadow: selectedRam === opt ? 'inset 2px 2px 4px rgba(0,0,0,0.15), inset -2px -2px 4px rgba(255,255,255,0.1)' : undefined }}
               >
                 {opt}
@@ -121,11 +120,10 @@ export default function ProductCard({ product, onViewDetail }) {
               <button
                 key={opt}
                 onClick={() => setSelectedStorage(opt)}
-                className={`px-2.5 py-1 text-xs font-semibold rounded-lg transition-all ${
-                  selectedStorage === opt
+                className={`px-2.5 py-1 text-xs font-semibold rounded-lg transition-all ${selectedStorage === opt
                     ? 'nm-btn-accent text-white'
                     : 'nm-btn text-[var(--nm-text-secondary)]'
-                }`}
+                  }`}
                 style={{ borderRadius: '8px', boxShadow: selectedStorage === opt ? 'inset 2px 2px 4px rgba(0,0,0,0.15), inset -2px -2px 4px rgba(255,255,255,0.1)' : undefined }}
               >
                 {opt}
