@@ -8,14 +8,23 @@ export default function ProductsGrid({ products, searchTerm, setSearchTerm, sele
   const [maxPrice, setMaxPrice] = useState('');
   const [selectedCpu, setSelectedCpu] = useState('');
 
+  const getGpuLabel = (gpu) => {
+    if (!gpu) return '';
+    if (typeof gpu === 'string') return gpu;
+    if (Array.isArray(gpu.dedicated) && gpu.dedicated[0]) return gpu.dedicated[0];
+    if (gpu.dedicated) return gpu.dedicated;
+    if (gpu.integrated) return gpu.integrated;
+    return '';
+  };
+
   useEffect(() => {
     let filtered = products;
     if (searchTerm) {
       filtered = filtered.filter(product =>
         product.brand.toLowerCase().includes(searchTerm.toLowerCase()) ||
         product.model.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        product.cpu.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        product.gpu.toLowerCase().includes(searchTerm.toLowerCase())
+        (product.cpu || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
+        getGpuLabel(product.gpu).toLowerCase().includes(searchTerm.toLowerCase())
       );
     }
     if (selectedBrand) {
@@ -33,12 +42,15 @@ export default function ProductsGrid({ products, searchTerm, setSearchTerm, sele
     setFilteredProducts(filtered);
   }, [products, searchTerm, selectedBrand, selectedScreenSize, maxPrice, selectedCpu]);
 
-  const screenSizes = [...new Set(products.map(p => p.screen.split('"')[0] + '"'))];
+  const screenSizes = [...new Set(products
+    .map(p => p.screen)
+    .filter(Boolean)
+    .map(screen => screen.split('"')[0] + '"'))];
   const brands = [...new Set(products.map(p => p.brand))].sort((a, b) => a.localeCompare(b));
   const cpuTypes = [
     ...new Set(
       products.flatMap(p => {
-        const cpu = p.cpu.toLowerCase();
+        const cpu = (p.cpu || '').toLowerCase();
         const types = [];
         if (cpu.includes('i5')) types.push('Core i5');
         if (cpu.includes('i7')) types.push('Core i7');

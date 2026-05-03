@@ -9,12 +9,14 @@ const RAM_PRICE_PER_8GB = 9000;
 const STORAGE_PRICE_PER_256GB = 8000;
 
 function parseRam(ramStr) {
-  const match = ramStr.match(/(\d+)/);
+  if (!ramStr) return null;
+  const match = String(ramStr).match(/(\d+)/);
   return match ? parseInt(match[1]) : 16;
 }
 
 function parseStorage(storageStr) {
-  const match = storageStr.match(/(\d+)/);
+  if (!storageStr) return null;
+  const match = String(storageStr).match(/(\d+)/);
   if (!match) return 512;
   const num = parseInt(match[1]);
   if (storageStr.toLowerCase().includes('tb')) return num * 1024;
@@ -27,24 +29,44 @@ function ramGBFromOption(opt) {
 }
 
 function storageGBFromOption(opt) {
+  if (!opt) return null;
   if (opt.includes('TB')) return parseInt(opt) * 1024;
   return parseInt(opt);
+}
+
+function getStorageLabel(storage) {
+  if (!storage) return '';
+  if (typeof storage === 'string') return storage;
+  if (storage.primary) return storage.primary;
+  return '';
+}
+
+function getGpuLabel(gpu) {
+  if (!gpu) return '';
+  if (typeof gpu === 'string') return gpu;
+  if (Array.isArray(gpu.dedicated) && gpu.dedicated[0]) return gpu.dedicated[0];
+  if (gpu.dedicated) return gpu.dedicated;
+  if (gpu.integrated) return gpu.integrated;
+  return '';
 }
 
 export default function ProductCard({ product, onViewDetail }) {
   const { id, brand, model, name, cpu, ram, storage, gpu, screen, price, originalPrice, condition, qty, images, highlights, rating } = product;
   const { addItem } = useCart();
 
+  const storageLabel = getStorageLabel(storage);
+  const gpuLabel = getGpuLabel(gpu);
   const baseRamGB = parseRam(ram);
-  const baseStorageGB = parseStorage(storage);
+  const baseStorageGB = parseStorage(storageLabel);
 
-  const defaultRam = RAM_OPTIONS.find(o => ramGBFromOption(o) === baseRamGB) || '16GB';
-  const defaultStorage = STORAGE_OPTIONS.find(o => storageGBFromOption(o) === baseStorageGB) || '512GB';
+  const defaultRam = baseRamGB ? (RAM_OPTIONS.find(o => ramGBFromOption(o) === baseRamGB) || '16GB') : '';
+  const defaultStorage = baseStorageGB ? (STORAGE_OPTIONS.find(o => storageGBFromOption(o) === baseStorageGB) || '512GB') : '';
 
   const [selectedRam, setSelectedRam] = useState(defaultRam);
   const [selectedStorage, setSelectedStorage] = useState(defaultStorage);
 
   const calculatedPrice = useMemo(() => {
+    if (!baseRamGB || !baseStorageGB) return price;
     const ramDiff = (ramGBFromOption(selectedRam) - baseRamGB) / 8;
     const storageDiff = (storageGBFromOption(selectedStorage) - baseStorageGB) / 256;
     return price + (ramDiff * RAM_PRICE_PER_8GB) + (storageDiff * STORAGE_PRICE_PER_256GB);
@@ -86,51 +108,55 @@ export default function ProductCard({ product, onViewDetail }) {
               <p className="text-xs text-[var(--nm-text)] font-semibold truncate">{cpu.split(' ').slice(0, 3).join(' ')}</p>
             </div>
           )}
-          {gpu && (
+          {gpuLabel && (
             <div className="nm-inset-sm p-2">
               <span className="text-[10px] font-bold text-[var(--nm-accent)] block uppercase">GPU</span>
-              <p className="text-xs text-[var(--nm-text)] font-semibold truncate">{gpu}</p>
+              <p className="text-xs text-[var(--nm-text)] font-semibold truncate">{gpuLabel}</p>
             </div>
           )}
         </div>
 
-        <div className="mb-2">
-          <label className="text-[10px] font-bold text-[var(--nm-text-secondary)] uppercase tracking-wider block mb-1">RAM</label>
-          <div className="flex gap-1.5 flex-wrap">
-            {RAM_OPTIONS.map(opt => (
-              <button
-                key={opt}
-                onClick={() => setSelectedRam(opt)}
-                className={`px-2.5 py-1 text-xs font-semibold rounded-lg transition-all ${selectedRam === opt
+        {baseRamGB && (
+          <div className="mb-2">
+            <label className="text-[10px] font-bold text-[var(--nm-text-secondary)] uppercase tracking-wider block mb-1">RAM</label>
+            <div className="flex gap-1.5 flex-wrap">
+              {RAM_OPTIONS.map(opt => (
+                <button
+                  key={opt}
+                  onClick={() => setSelectedRam(opt)}
+                  className={`px-2.5 py-1 text-xs font-semibold rounded-lg transition-all ${selectedRam === opt
                     ? 'nm-btn-accent text-white'
                     : 'nm-btn text-[var(--nm-text-secondary)]'
-                  }`}
-                style={{ borderRadius: '8px', boxShadow: selectedRam === opt ? 'inset 2px 2px 4px rgba(0,0,0,0.15), inset -2px -2px 4px rgba(255,255,255,0.1)' : undefined }}
-              >
-                {opt}
-              </button>
-            ))}
+                    }`}
+                  style={{ borderRadius: '8px', boxShadow: selectedRam === opt ? 'inset 2px 2px 4px rgba(0,0,0,0.15), inset -2px -2px 4px rgba(255,255,255,0.1)' : undefined }}
+                >
+                  {opt}
+                </button>
+              ))}
+            </div>
           </div>
-        </div>
+        )}
 
-        <div className="mb-3">
-          <label className="text-[10px] font-bold text-[var(--nm-text-secondary)] uppercase tracking-wider block mb-1">Storage</label>
-          <div className="flex gap-1.5 flex-wrap">
-            {STORAGE_OPTIONS.map(opt => (
-              <button
-                key={opt}
-                onClick={() => setSelectedStorage(opt)}
-                className={`px-2.5 py-1 text-xs font-semibold rounded-lg transition-all ${selectedStorage === opt
+        {baseStorageGB && (
+          <div className="mb-3">
+            <label className="text-[10px] font-bold text-[var(--nm-text-secondary)] uppercase tracking-wider block mb-1">Storage</label>
+            <div className="flex gap-1.5 flex-wrap">
+              {STORAGE_OPTIONS.map(opt => (
+                <button
+                  key={opt}
+                  onClick={() => setSelectedStorage(opt)}
+                  className={`px-2.5 py-1 text-xs font-semibold rounded-lg transition-all ${selectedStorage === opt
                     ? 'nm-btn-accent text-white'
                     : 'nm-btn text-[var(--nm-text-secondary)]'
-                  }`}
-                style={{ borderRadius: '8px', boxShadow: selectedStorage === opt ? 'inset 2px 2px 4px rgba(0,0,0,0.15), inset -2px -2px 4px rgba(255,255,255,0.1)' : undefined }}
-              >
-                {opt}
-              </button>
-            ))}
+                    }`}
+                  style={{ borderRadius: '8px', boxShadow: selectedStorage === opt ? 'inset 2px 2px 4px rgba(0,0,0,0.15), inset -2px -2px 4px rgba(255,255,255,0.1)' : undefined }}
+                >
+                  {opt}
+                </button>
+              ))}
+            </div>
           </div>
-        </div>
+        )}
 
         {highlights?.length > 0 && (
           <div className="mb-3 flex flex-wrap gap-1">
@@ -145,11 +171,11 @@ export default function ProductCard({ product, onViewDetail }) {
 
         <div className="nm-inset p-3 mb-4 text-center">
           <div className="text-xl font-bold text-[var(--nm-text)]">{formatPrice(calculatedPrice)}</div>
-          {(selectedRam !== defaultRam || selectedStorage !== defaultStorage) && (
+          {(selectedRam && selectedRam !== defaultRam) || (selectedStorage && selectedStorage !== defaultStorage) ? (
             <div className="text-xs text-[var(--nm-text-secondary)] mt-0.5">
               Base: {formatPrice(price)}
             </div>
-          )}
+          ) : null}
         </div>
 
         <div className="grid grid-cols-2 gap-2">
