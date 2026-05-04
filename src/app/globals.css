@@ -35,7 +35,7 @@
 
 * {
   scrollbar-width: thin;
-  scrollbar-color: var(--nm-accent-dark) var(--nm-bg);
+  scrollbar-color: var(--nm-accent) var(--nm-bg);
 }
 
 *::-webkit-scrollbar {
@@ -47,7 +47,7 @@
 }
 
 *::-webkit-scrollbar-thumb {
-  background: var(--nm-accent-dark);
+  background: var(--nm-accent);
   border-radius: 4px;
 }
 
