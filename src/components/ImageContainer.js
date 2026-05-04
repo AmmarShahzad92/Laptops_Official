@@ -21,15 +21,38 @@ function isSafeImageUrl(value) {
 }
 
 function normalizeImageList(images, fallback) {
-  const raw = Array.isArray(images)
-    ? images
-    : (images && typeof images === 'object')
-      ? Object.values(images)
-      : [];
+  let raw = [];
 
-  const list = raw
-    .map(value => (typeof value === 'string' ? value.trim() : ''))
-    .filter(isSafeImageUrl);
+  if (Array.isArray(images)) {
+    raw = images;
+  } else if (typeof images === 'string') {
+    try {
+      const parsed = JSON.parse(images);
+      if (Array.isArray(parsed)) {
+        raw = parsed;
+      } else if (parsed && typeof parsed === 'object') {
+        raw = Object.values(parsed);
+      }
+    } catch {
+      raw = [];
+    }
+  } else if (images && typeof images === 'object') {
+    const keys = Object.keys(images);
+    const allNumeric = keys.every(key => String(Number(key)) === key);
+    const orderedKeys = allNumeric
+      ? keys.sort((a, b) => Number(a) - Number(b))
+      : keys;
+    raw = orderedKeys.map(key => images[key]);
+  }
+
+  const list = [];
+  const seen = new Set();
+  for (const value of raw) {
+    const trimmed = typeof value === 'string' ? value.trim() : '';
+    if (!isSafeImageUrl(trimmed) || seen.has(trimmed)) continue;
+    seen.add(trimmed);
+    list.push(trimmed);
+  }
 
   if (!list.length && fallback && isSafeImageUrl(fallback)) {
     list.push(fallback.trim());
@@ -52,11 +75,11 @@ export default function ImageContainer({ productImage, displayName, condition, i
       setActiveIndex((prev) => (prev + 1) % imageList.length);
     }, 1600);
     return () => clearInterval(intervalId);
-  }, [hovering, imageList.length]);
+  }, [hovering, imageList]);
 
   useEffect(() => {
     setActiveIndex(0);
-  }, [imageList.length]);
+  }, [imageList]);
 
   const handleImageLoad = (img) => {
     if (!img?.naturalWidth || !img?.naturalHeight) return;
