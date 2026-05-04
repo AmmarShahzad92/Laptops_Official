@@ -16,7 +16,7 @@
     "esModuleInterop": true,
     "resolveJsonModule": true,
     "isolatedModules": true,
-    "ignoreDeprecations": "6.0",
+    "ignoreDeprecations": "5.0", //5.0 mandatory to ignore deprecation warnings for the `@types/react` package, which is a dependency of Next.js
     "jsx": "react-jsx",
     "baseUrl": ".",
     "paths": {
