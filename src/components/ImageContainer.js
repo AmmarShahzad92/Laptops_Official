@@ -7,17 +7,44 @@ function optimizeUrl(url) {
   return `${base}?auto=format&fit=crop&w=640&q=72&fm=webp`;
 }
 
+function isSafeImageUrl(value) {
+  if (!value || typeof value !== 'string') return false;
+  const trimmed = value.trim();
+  if (!trimmed) return false;
+  if (trimmed.startsWith('/')) return true;
+  try {
+    const url = new URL(trimmed);
+    return url.protocol === 'http:' || url.protocol === 'https:';
+  } catch {
+    return false;
+  }
+}
+
+function normalizeImageList(images, fallback) {
+  const raw = Array.isArray(images)
+    ? images
+    : (images && typeof images === 'object')
+      ? Object.values(images)
+      : [];
+
+  const list = raw
+    .map(value => (typeof value === 'string' ? value.trim() : ''))
+    .filter(isSafeImageUrl);
+
+  if (!list.length && fallback && isSafeImageUrl(fallback)) {
+    list.push(fallback.trim());
+  }
+
+  return list;
+}
+
 export default function ImageContainer({ productImage, displayName, condition, images, availability, qty, priority = false }) {
   const [imageError, setImageError] = useState(false);
   const [activeIndex, setActiveIndex] = useState(0);
   const [hovering, setHovering] = useState(false);
   const [aspectRatio, setAspectRatio] = useState(4 / 3);
 
-  const imageList = useMemo(() => {
-    const list = Array.isArray(images) ? images.filter(Boolean) : [];
-    if (!list.length && productImage) list.push(productImage);
-    return list;
-  }, [images, productImage]);
+  const imageList = useMemo(() => normalizeImageList(images, productImage), [images, productImage]);
 
   useEffect(() => {
     if (!hovering || imageList.length < 2) return;
