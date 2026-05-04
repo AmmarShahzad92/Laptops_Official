@@ -1,11 +1,20 @@
 'use client';
 import { useState, useCallback, useEffect } from 'react';
 import Image from 'next/image';
+import { useCart } from '@/context/CartContext';
+
+function getStorageLabel(storage) {
+  if (!storage) return '';
+  if (typeof storage === 'string') return storage;
+  if (storage.primary) return storage.primary;
+  return '';
+}
 
 export default function ProductDetailModal({ products, initialIndex, onClose }) {
   const [currentIndex, setCurrentIndex] = useState(initialIndex);
   const [direction, setDirection] = useState(null); // 'left' | 'right' | null
   const [activeImage, setActiveImage] = useState(0);
+  const { addItem } = useCart();
 
   const product = products[currentIndex];
 
@@ -42,6 +51,9 @@ export default function ProductDetailModal({ products, initialIndex, onClose }) 
 
   const formatPrice = (p) => new Intl.NumberFormat('en-PK', { style: 'currency', currency: 'PKR', minimumFractionDigits: 0, maximumFractionDigits: 0 }).format(p);
   const images = product.images || [];
+  const storageLabel = getStorageLabel(product.storage);
+  const selectedRam = product.ram || 'Default';
+  const selectedStorage = storageLabel || 'Default';
 
   return (
     <div className="fixed inset-0 z-[55] flex items-center justify-center p-4 md:p-8">
@@ -133,6 +145,15 @@ export default function ProductDetailModal({ products, initialIndex, onClose }) 
               {product.qty > 0 && (
                 <div className="text-xs text-[var(--nm-text-secondary)] mt-1">{product.qty} units available</div>
               )}
+            </div>
+
+            <div className="flex gap-2 mb-5">
+              <button
+                className="nm-btn-accent px-5 py-2 text-sm font-semibold"
+                onClick={() => addItem(product, selectedRam, selectedStorage, product.price)}
+              >
+                Add to Cart
+              </button>
             </div>
 
             {/* Highlights */}

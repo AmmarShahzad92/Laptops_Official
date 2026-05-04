@@ -112,12 +112,6 @@ export default function ImageContainer({ productImage, displayName, condition, i
         </div>
       )}
 
-      <div className="absolute top-3 right-3 z-20">
-        <span className={`nm-badge text-xs ${availability ? 'text-[var(--nm-success)]' : 'text-[var(--nm-danger)]'}`}>
-          {availability ? (qty ? `${qty} Left` : 'In Stock') : 'Out of Stock'}
-        </span>
-      </div>
-
       {condition && (
         <div className="absolute bottom-3 left-3 z-20">
           <span className="nm-badge text-[var(--nm-accent)] text-xs">{condition}</span>
