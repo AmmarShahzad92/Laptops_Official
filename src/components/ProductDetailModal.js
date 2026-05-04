@@ -39,6 +39,14 @@ export default function ProductDetailModal({ products, initialIndex, onClose }) 
     return () => window.removeEventListener('keydown', handler);
   }, [onClose, goLeft, goRight]);
 
+  useEffect(() => {
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    return () => {
+      document.body.style.overflow = previousOverflow;
+    };
+  }, []);
+
   // Clear direction after animation
   useEffect(() => {
     if (direction) {

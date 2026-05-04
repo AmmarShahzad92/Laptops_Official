@@ -51,7 +51,7 @@ function getGpuLabel(gpu) {
 }
 
 export default function ProductCard({ product, onViewDetail }) {
-  const { id, brand, model, name, cpu, ram, storage, gpu, screen, price, originalPrice, condition, qty, images, highlights, rating } = product;
+  const { id, brand, model, name, cpu, ram, storage, gpu, screen, price, originalPrice, condition, images, highlights, rating } = product;
   const { addItem } = useCart();
 
   const storageLabel = getStorageLabel(storage);
@@ -74,8 +74,7 @@ export default function ProductCard({ product, onViewDetail }) {
 
   const productImage = images?.[0] || '/images/laptop-placeholder.jpg';
   const displayName = name || `${brand} ${model}`;
-  const availability = qty > 0;
-  const ImageDetails = { productImage, displayName, condition, images, availability, qty };
+  const ImageDetails = { productImage, displayName, condition, images };
 
   const formatPrice = (p) => new Intl.NumberFormat('en-PK', { style: 'currency', currency: 'PKR', minimumFractionDigits: 0, maximumFractionDigits: 0 }).format(p);
 
@@ -190,11 +189,10 @@ export default function ProductCard({ product, onViewDetail }) {
             View
           </button>
           <button
-            onClick={() => availability && addItem(product, selectedRam, selectedStorage, calculatedPrice)}
-            disabled={!availability}
-            className="nm-btn-accent py-2.5 px-3 text-sm disabled:opacity-50 disabled:cursor-not-allowed"
+            onClick={() => addItem(product, selectedRam, selectedStorage, calculatedPrice)}
+            className="nm-btn-accent py-2.5 px-3 text-sm"
           >
-            {availability ? 'Add to Cart' : 'Out of Stock'}
+            Add to Cart
           </button>
         </div>
       </div>
